@@ -1,31 +1,41 @@
 <template>
-  <div class="login">
-    <div class="form" style="height: 100%;">
-      <el-form
-        ref="form"
-        :model="form"
-        :rules="rules"
-        label-width="0"
-        style="height: 100%; padding: 20px 20px; font-size: 1.2rem;"
-        status-icon
-      >
-        <el-form-item prop="username">
-          <el-input v-model="form.username" placeholder="用户名"></el-input>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input type="password" v-model="form.password" placeholder="密码"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-row :gutter="20">
-            <el-col :span="4" :offset="4">
-              <el-button type="primary" @click="login" round>登录</el-button>
-            </el-col>
-            <el-col :span="4" :offset="4">
-              <el-button type="success" @click="register" round>注册</el-button>
-            </el-col>
-          </el-row>
-        </el-form-item>
-      </el-form>
+  <div>
+    <div>
+      <h2>欢迎使用 Kugga ！</h2>
+    </div>
+    <div class="login" style="height: 100%;">
+      <img
+        src="https://kugga-storage.oss-cn-hangzhou.aliyuncs.com/avatar/default.png"
+        alt
+        class="icon"
+      />
+      <div class="form" style="height: 100%;">
+        <el-form
+          ref="form"
+          :model="form"
+          :rules="rules"
+          label-width="0"
+          style="height: 100%; padding: 20px 20px; font-size: 1.2rem;"
+          status-icon
+        >
+          <el-form-item prop="username">
+            <el-input v-model="form.username" placeholder="用户名"></el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input type="password" v-model="form.password" placeholder="密码"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-row :gutter="20">
+              <el-col :span="4" :offset="4">
+                <el-button type="primary" @click="login" round>登录</el-button>
+              </el-col>
+              <el-col :span="4" :offset="4">
+                <el-button type="success" @click="register" round>注册</el-button>
+              </el-col>
+            </el-row>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
   </div>
 </template>
@@ -75,7 +85,10 @@ export default {
     };
   },
   methods: {
-    async login() {},
+    async login() {
+        const res = await this.$http.get("/api/user?username"+this.form.username+"&password="+this.form.password);
+        console.log(res.data);
+    },
     register() {
       this.$router.push({ name: "register" });
     }
