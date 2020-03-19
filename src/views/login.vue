@@ -86,7 +86,7 @@ export default {
   },
   methods: {
     async login() {
-        const res = await this.$http.get("/api/user?username"+this.form.username+"&password="+this.form.password);
+        const res = await this.$http.get("/api/user?username="+this.form.username+"&password="+this.form.password);
         console.log(res.data);
     },
     register() {

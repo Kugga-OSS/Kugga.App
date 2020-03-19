@@ -1,10 +1,10 @@
 var axios = require("axios");
 axios.defaults.withCredentials=true
 const http = axios.create({
-    baseURL: "http://localhost:1080"
+    baseURL: "http://localhost:5555"
 })
 
-// 设置拦截器
+// // 设置拦截器
 // http.interceptors.response.use(res => {
 //     return res;
 // }, err => {
@@ -18,7 +18,7 @@ const http = axios.create({
 //     return Promise.reject(err);
 // });
 
-// 请求头上加入token 
+// // 请求头上加入token
 // http.interceptors.request.use(function (config) {
 //     config.headers.Authorization = "Bearer " + localStorage.token;
 //     return config;
