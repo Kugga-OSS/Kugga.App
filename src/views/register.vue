@@ -128,8 +128,13 @@ export default {
   },
   methods: {
     async register() {
-        const res = await this.$http.post("/api/user?username="+this.form.username+"&password="+this.form.password+"&displayName="+this.form.displayName+"&email="+this.form.email);
-        console.log(res.data);
+      const res = await this.$service.post("/api/user", {
+        username: this.form.username,
+        password: this.form.password,
+        displayName: this.form.displayName,
+        email: this.form.email
+      });
+      console.log(res);
     }
   }
 };

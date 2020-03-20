@@ -86,8 +86,12 @@ export default {
   },
   methods: {
     async login() {
-        const res = await this.$http.get("/api/user?username="+this.form.username+"&password="+this.form.password);
-        console.log(res.data);
+      const res = await this.$service
+        .get("/api/user", {
+          username: this.form.username,
+          password: this.form.password
+        })
+        .catch(err => {});
     },
     register() {
       this.$router.push({ name: "register" });

@@ -1,29 +1,49 @@
+import { MessageBox, Message } from 'element-ui'
+
 var axios = require("axios");
 axios.defaults.withCredentials=true
+
 const http = axios.create({
-    baseURL: "http://localhost:5555"
+    baseURL: "http://localhost:5555",
+    timeout: 5000
 })
 
-// // 设置拦截器
-// http.interceptors.response.use(res => {
-//     return res;
-// }, err => {
-//     Vue.prototype.$message({
-//         type: "error",
-//         message: err.response.data.message, 
-//     })
-//     if (err.response.data.status === 401) {
-//         router.push("/login");
-//     }
-//     return Promise.reject(err);
-// });
+http.interceptors.request.use(
+    config => {
+        if (localStorage && localStorage.token) {
+            config.headers['authentication'] = localStorage.token;
+        }
+        return config;
+    },
+    error => {
+        console.log(error);
+        return Promise.reject(error);
+    }
+)
 
-// // 请求头上加入token
-// http.interceptors.request.use(function (config) {
-//     config.headers.Authorization = "Bearer " + localStorage.token;
-//     return config;
-// }, function (err) {
-//     return Promise.reject(err);
-// })
+http.interceptors.response.use(
+    response => {
+        const res = response.data
+        if (res.status && String(res.status) !== "200") {
+            Message({
+                message: res.data.message || 'Error',
+                type: 'error',
+                duration: 5 * 1000
+            })
+            return Promise.reject(new Error(res.message));
+        } else {
+            return res;
+        }
+    },
+    error => {
+        console.log('err' + error) // for debug
+        Message({
+            message: error.message,
+            type: 'error',
+            duration: 5 * 1000
+        })
+        return Promise.reject(error)
+    }
+)
 
 export default http
