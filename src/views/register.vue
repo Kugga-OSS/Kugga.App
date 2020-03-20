@@ -40,6 +40,17 @@
               </el-col>
             </el-row>
           </el-form-item>
+          <el-row>
+            <el-col :span="4" :offset="0">
+              <el-button
+                type="primary"
+                icon="el-icon-back"
+                size="small"
+                style="background-color: white; color: black; border: none;"
+                @click="backToLogin"
+              >返回登录</el-button>
+            </el-col>
+          </el-row>
         </el-form>
       </div>
     </div>
@@ -135,6 +146,9 @@ export default {
         email: this.form.email
       });
       console.log(res);
+    },
+    backToLogin() {
+        this.$router.push({ name : "login" });
     }
   }
 };

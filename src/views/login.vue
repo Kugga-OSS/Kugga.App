@@ -92,6 +92,17 @@ export default {
           password: this.form.password
         })
         .catch(err => {});
+      console.log(res);
+      const token = res.data.jwt;
+      if (token != null) {
+        localStorage.token = token;
+        this.$router.push({ name: "chat/with" });
+        this.$message({
+          message: "登录成功",
+          type: "success",
+          duration: 5 * 1000
+        });
+      }
     },
     register() {
       this.$router.push({ name: "register" });
