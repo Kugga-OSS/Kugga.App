@@ -2,3 +2,21 @@
     width: 100%;
     height: 100%;
 }
+
+.chat-item {
+    height: 10%;
+    width: 100%;
+    background-color: white;
+    padding: 5px 0;
+    display: flex;
+}
+
+.chat-item:hover {
+    background: #f0f0f0;
+}
+
+.contact-list {
+    height: 100%; 
+    background: green;
+    border-radius: 5px;
+}

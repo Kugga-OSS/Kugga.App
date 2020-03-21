@@ -1,8 +1,10 @@
 <template>
   <div class="container">
     <el-row style="height: 100%;">
-      <!-- 左侧的最近联系人列表 -->
-      <el-col :span="6" style="height: 100%; background: black; border-radius: 5px;"></el-col>
+      <!-- 左侧的最近联系人列表区域 -->
+      <el-col :span="6" style="height: 100%; border-radius: 5px;">
+        <contact-list></contact-list>
+      </el-col>
       <el-col :span="18" style="height: 100%;">
         <router-view/>
       </el-col>

@@ -96,7 +96,7 @@ export default {
       const token = res.data.jwt;
       if (token != null) {
         localStorage.token = token;
-        this.$router.push({ name: "chat/with" });
+        this.$router.push({ name: "defaultView" });
         this.$message({
           message: "登录成功",
           type: "success",
