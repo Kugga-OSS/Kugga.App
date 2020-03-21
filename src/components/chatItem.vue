@@ -1,14 +1,14 @@
 <template>
-    <div class="chat-item">
-        <div>
+    <div class="chat-item" @click="chatWith">
+        <div style="" class="avatar-div">
             <img src="https://kugga-storage.oss-cn-hangzhou.aliyuncs.com/avatar/default.png" alt="" class="avatar">
         </div>
-        <div style="height: 100%; padding: 15px 0;">
-            <div style="margin-bottom: 10px;">
-                displayName
+        <div class="chat-preview">
+            <div class="chat-preview-display-name">
+                <span class="overflow-text">yfc</span>
             </div>
-            <div>
-                contect
+            <div class="chat-preview-last-message">
+                <span class="overflow-text">hello</span>
             </div>
         </div>
     </div>
@@ -16,7 +16,16 @@
 
 <script>
 export default {
+    data() {
+        return {
 
+        }
+    },
+    methods: {
+        chatWith() {
+            this.$router.push({name : "chatMain", params : {people : String(Math.random())}});
+        }
+    }
 }
 </script>
 

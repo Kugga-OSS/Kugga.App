@@ -6,6 +6,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './static/css/global.css'
 import './static/css/login.css'
 import './static/css/chat.css'
+import './static/css/chatMain.css'
 import service from "./static/js/service"
 import contactList from "./components/contactList"
 import chatItem from "./components/chatItem"

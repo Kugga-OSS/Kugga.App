@@ -1,0 +1,9 @@
+.chat-banner {
+    background: #f0f0f0;
+}
+
+.chat-banner-title {
+    font-size: 1.2rem;
+    margin: 17px 0;
+    height: 100%; 
+}
