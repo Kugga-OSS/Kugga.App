@@ -100,10 +100,9 @@ export default {
       if (token != null) {
         localStorage.token = token;
         this.$router.push({ name: "defaultView" });
-        this.$message({
-          message: "登录成功",
+        this.$notify({
+          title: "登录成功",
           type: "success",
-          duration: 5 * 1000
         });
       }
     },
@@ -112,7 +111,9 @@ export default {
     }
   },
   created() {
-    this.form.username = this.username;
+    if (this.username != null) {
+      this.form.username = this.username;
+    }
   }
 };
 </script>

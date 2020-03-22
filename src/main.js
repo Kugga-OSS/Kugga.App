@@ -12,6 +12,7 @@ import service from "./static/js/service"
 import contactList from "./components/contactList"
 import chatItem from "./components/chatItem"
 import featureBlock from "./components/featureBlock"
+import floatBox from "./components/floatBox"
 
 Vue.use(ElementUI)
 Vue.prototype.$service = service;
@@ -20,6 +21,7 @@ Vue.config.productionTip = false
 Vue.component('contact-list', contactList);
 Vue.component('chat-item', chatItem);
 Vue.component('feature-block', featureBlock);
+Vue.component('float-box', floatBox);
 
 new Vue({
   router,
