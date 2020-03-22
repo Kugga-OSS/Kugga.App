@@ -10,7 +10,7 @@
 
 .feature-block-set {
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     flex-wrap: wrap;
     height: 30%; 
     width: 100%;

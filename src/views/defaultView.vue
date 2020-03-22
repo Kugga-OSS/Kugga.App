@@ -2,18 +2,18 @@
   <!-- 主要功能页面 -->
   <div class="default">
     <div>
-      <h3>欢迎回来！</h3>
+      <h3 class="overflow-text">欢迎回来！{{ user.displayName }}</h3>
     </div>
     <div class="feature-container">
       <h2 style="float: left;">联系人</h2>
       <div class="feature-block-set">
         <feature-block iconName="el-icon-connection" message="通讯录">
         </feature-block>
-        <feature-block iconName="el-icon-plus" message="添加联系人">
+        <feature-block iconName="el-icon-plus" message="添加联系人/群组">
         </feature-block>
         <feature-block iconName="el-icon-close" message="删除联系人">
         </feature-block>
-        <feature-block iconName="el-icon-chat-line-round" message="创建群聊">
+        <feature-block iconName="el-icon-chat-line-round" message="创建群组">
         </feature-block>
       </div>
     </div>
@@ -35,7 +35,22 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      user: {},
+    }
+  },
+  methods: {
+    async getUser() {
+      const res = await this.$service.get("/auth_api/user").catch(() => {});
+      this.user = res.data;
+    }
+  },
+  created() {
+    this.getUser();
+  }
+};
 </script>
 
 <style>
