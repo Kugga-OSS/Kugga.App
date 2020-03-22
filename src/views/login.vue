@@ -42,6 +42,9 @@
 
 <script>
 export default {
+  props: {
+    username: String
+  },
   data() {
     var checkUsername = (rule, value, callback) => {
       if (!value) {
@@ -107,6 +110,9 @@ export default {
     register() {
       this.$router.push({ name: "register" });
     }
+  },
+  created() {
+    this.form.username = this.username;
   }
 };
 </script>

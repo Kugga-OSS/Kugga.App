@@ -145,10 +145,19 @@ export default {
         displayName: this.form.displayName,
         email: this.form.email
       });
-      console.log(res);
+      if (res != null) {
+        this.$message({
+          message: "注册成功",
+          type: "success"
+        });
+        this.backToLoginWithUsername(this.form.username);
+      }
     },
     backToLogin() {
-        this.$router.push({ name : "login" });
+        this.$router.push({ name : "login"});
+    },
+    backToLoginWithUsername(userName) {
+        this.$router.push({name : "login", params: {username : userName}});
     }
   }
 };

@@ -2,7 +2,7 @@
   <!-- 主要功能页面 -->
   <div class="default">
     <div>
-      <h3 class="overflow-text">欢迎回来！{{ user.displayName }}</h3>
+      <h3 class="overflow-text">欢迎回来！{{ user.displayName }} ~ </h3>
     </div>
     <div class="feature-container">
       <h2 style="float: left;">联系人</h2>
