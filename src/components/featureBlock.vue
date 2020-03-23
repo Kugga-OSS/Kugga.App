@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-right: 20px;">
+  <div>
     <div class="feature-block">
       <span class="feature-icon" :class="iconName"></span>
     </div>

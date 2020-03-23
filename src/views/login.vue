@@ -108,9 +108,19 @@ export default {
     },
     register() {
       this.$router.push({ name: "register" });
-    }
+    },
+    async getUser() {
+      const res = await this.$service.get("/auth_api/user").catch(() => {});
+      console.log(res.data.state);
+      if (res && res.data && String(res.data.state) == "1") {
+        this.$router.push({name : "defaultView"});
+      }
+    } 
   },
   created() {
+    if (localStorage  && localStorage.token) {
+      const res = this.getUser();
+    }
     if (this.username != null) {
       this.form.username = this.username;
     }
