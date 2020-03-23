@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="提示" :visible.sync="isVisiable" width="30%" :before-close="handleClose">
-    <span>这是一段信息</span>
+    <span>{{  }}</span>
     <span slot="footer" class="dialog-footer">
       <el-button @click="isVisiable = false">取 消</el-button>
       <el-button type="primary" @click="isVisiable = false">确 定</el-button>
@@ -11,7 +11,7 @@
 <script>
   export default {
     props: {
-        isVisiable: Boolean
+        isVisiable: Boolean,
     },
     data() {
       return {
