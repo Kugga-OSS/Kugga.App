@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       user: {},
-      show: false
+      show: false,
     };
   },
   methods: {
@@ -61,7 +61,7 @@ export default {
     showFloatBox() {
       this.show = true;
       this.$forceUpdate();
-    }
+    },
   },
   created() {
     this.getUser();

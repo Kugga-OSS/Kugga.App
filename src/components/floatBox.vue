@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="提示" :visible.sync="isVisiable" width="30%" :before-close="handleClose">
+  <el-dialog :title="title" :visible.sync="isVisiable" width="40%" :before-close="handleClose" center="true">
     <span>{{  }}</span>
     <span slot="footer" class="dialog-footer">
       <el-button @click="isVisiable = false">取 消</el-button>
@@ -12,6 +12,7 @@
   export default {
     props: {
         isVisiable: Boolean,
+        title: String,
     },
     data() {
       return {
@@ -30,4 +31,5 @@
 </script>
 
 <style>
+
 </style>

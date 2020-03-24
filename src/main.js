@@ -9,7 +9,7 @@ import './static/css/chat.css'
 import './static/css/chatMain.css'
 import './static/css/feature.css'
 import service from "./static/js/service"
-import contactList from "./components/contactList"
+import contactList from "./components/recentContactList"
 import chatItem from "./components/chatItem"
 import featureBlock from "./components/featureBlock"
 import floatBox from "./components/floatBox"
