@@ -33,6 +33,9 @@
         <div @click="showFloatBox('deleteAccount')" class="block">
           <feature-block iconName="el-icon-delete" message="注销账号"></feature-block>
         </div>
+        <div @click="quit" class="block">
+          <feature-block iconName="el-icon-d-arrow-right" message="退出登录"></feature-block>
+        </div>
       </div>
     </div>
     <div class="feature-container">
@@ -82,11 +85,34 @@ export default {
         this.show[name] = false;
       }
     },
+    quit() {
+      this.$confirm("是否退出登录?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.realQuit();
+        })
+        .catch(() => {
+          this.$message({
+            type: "success",
+            message: "仍然在线~"
+          });
+        });
+    },
+    realQuit() {
+      localStorage.removeItem("token");
+      this.$router.push({ name: "login" });
+      this.$message({
+        message: "已退出登录",
+        type: "success"
+      });
+    }
   },
   created() {
     this.getUser();
-  },
-
+  }
 };
 </script>
 

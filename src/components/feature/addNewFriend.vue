@@ -15,6 +15,8 @@
           :clearable="true"
           maxlength="30"
           style="margin-right: 5px;"
+          @clear="clearRes"
+          @input="whileChange"
         ></el-input>
         <el-button type="primary" icon="el-icon-search" @click="search" plain></el-button>
       </div>
@@ -51,7 +53,7 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <!-- <el-button type="primary" @click="close">关 闭</el-button> -->
-      
+
     </span>
   </el-dialog>
 </template>
@@ -111,8 +113,21 @@ export default {
     close() {
       this.$emit("close-float-box");
     },
+    clearRes() {
+        this.resList = [];
+        this.firstSearch = true;
+    },
+    whileChange() {
+        if (String(this.form.username).trim().length === 0) {
+            this.clearRes();
+        }
+    },
     handleClose(done) {
-        this.$emit("close-float-box");
+        this.$confirm("确认关闭？")
+        .then(_ => {
+          this.$emit("close-float-box");
+        })  
+        .catch(_ => {});
     }
   }
 };
