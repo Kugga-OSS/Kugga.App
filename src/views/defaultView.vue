@@ -5,7 +5,8 @@
       <h3 class="overflow-text">欢迎回来！{{ user.displayName }} ~</h3>
     </div>
     <!-- 监听close-float-box事件，若close-float-box出发，则在父组件中执行close -->
-    <contact :isVisiable="show.contact" v-on:close-float-box="close"></contact>
+    <contact :isVisiable="show.contact" v-on:close-float-box="close" title="通讯录"></contact>
+    <add-new-friend :isVisiable="show.addNewFriend" v-on:close-float-box="close" title="添加联系人"></add-new-friend>
     <div class="feature-container">
       <h2 style="float: left;">联系人</h2>
       <div class="feature-block-set">
@@ -13,7 +14,7 @@
           <feature-block iconName="el-icon-connection" message="通讯录"></feature-block>
         </div>
         <div @click="showFloatBox('addNewFriend')" class="block">
-          <feature-block iconName="el-icon-plus" message="添加联系人/群组"></feature-block>
+          <feature-block iconName="el-icon-plus" message="添加联系人"></feature-block>
         </div>
         <div @click="showFloatBox('deleteFriend')" class="block">
           <feature-block iconName="el-icon-close" message="删除联系人"></feature-block>

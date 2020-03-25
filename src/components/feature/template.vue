@@ -6,7 +6,6 @@
     :before-close="handleClose"
     :center="true"
   >
-    <span>{{ }}</span>
     <div>
         
     </div>
@@ -33,7 +32,7 @@ export default {
     handleClose(done) {
       this.$confirm("确认关闭？")
         .then(_ => {
-          done();
+          this.$emit("close-float-box");
         })
         .catch(_ => {});
     }

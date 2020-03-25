@@ -7,9 +7,7 @@
     :center="true"
   >
     <span>{{ }}</span>
-    <div>
-
-    </div>
+    <div></div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="close">取 消</el-button>
       <el-button type="primary" @click="close">确 定</el-button>
@@ -28,12 +26,12 @@ export default {
   },
   methods: {
     close() {
-        this.$emit("close-float-box");
+      this.$emit("close-float-box");
     },
     handleClose(done) {
       this.$confirm("确认关闭？")
         .then(_ => {
-          done();
+          this.$emit("close-float-box");
         })
         .catch(_ => {});
     }

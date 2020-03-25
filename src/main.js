@@ -12,8 +12,9 @@ import service from "./static/js/service"
 import contactList from "./components/recentContactList"
 import chatItem from "./components/chatItem"
 import featureBlock from "./components/featureBlock"
-
+// 引入业务逻辑组件
 import contact from "./components/feature/contact"
+import addNewFriend from "./components/feature/addNewFriend"
 
 
 Vue.use(ElementUI)
@@ -25,6 +26,7 @@ Vue.component('chat-item', chatItem);
 Vue.component('feature-block', featureBlock);
 // 业务逻辑组件
 Vue.component('contact', contact);
+Vue.component('add-new-friend', addNewFriend);
 
 new Vue({
   router,
