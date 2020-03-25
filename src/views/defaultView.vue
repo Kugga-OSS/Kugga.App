@@ -4,20 +4,21 @@
     <div>
       <h3 class="overflow-text">欢迎回来！{{ user.displayName }} ~</h3>
     </div>
-    <float-box :isVisiable="show"></float-box>
+    <!-- 监听close-float-box事件，若close-float-box出发，则在父组件中执行close -->
+    <contact :isVisiable="show.contact" v-on:close-float-box="close"></contact>
     <div class="feature-container">
       <h2 style="float: left;">联系人</h2>
       <div class="feature-block-set">
-        <div @click="showFloatBox" class="block">
+        <div @click="showFloatBox('contact')" class="block">
           <feature-block iconName="el-icon-connection" message="通讯录"></feature-block>
         </div>
-        <div @click="showFloatBox" class="block">
+        <div @click="showFloatBox('addNewFriend')" class="block">
           <feature-block iconName="el-icon-plus" message="添加联系人/群组"></feature-block>
         </div>
-        <div @click="showFloatBox" class="block">
+        <div @click="showFloatBox('deleteFriend')" class="block">
           <feature-block iconName="el-icon-close" message="删除联系人"></feature-block>
         </div>
-        <div @click="showFloatBox" class="block">
+        <div @click="showFloatBox('createGroup')" class="block">
           <feature-block iconName="el-icon-chat-line-round" message="创建群组"></feature-block>
         </div>
       </div>
@@ -25,10 +26,10 @@
     <div class="feature-container">
       <h2 style="float: left;">个人信息</h2>
       <div class="feature-block-set">
-        <div @click="showFloatBox" class="block">
+        <div @click="showFloatBox('edit')" class="block">
           <feature-block iconName="el-icon-edit" message="编辑个人信息"></feature-block>
         </div>
-        <div @click="showFloatBox" class="block">
+        <div @click="showFloatBox('deleteAccount')" class="block">
           <feature-block iconName="el-icon-delete" message="注销账号"></feature-block>
         </div>
       </div>
@@ -36,7 +37,7 @@
     <div class="feature-container">
       <h2 style="float: left;">开发者信息</h2>
       <div class="feature-block-set">
-        <div @click="showFloatBox" class="block">
+        <div @click="showFloatBox('callMe')" class="block">
           <feature-block iconName="el-icon-paperclip" message="联系开发者"></feature-block>
         </div>
       </div>
@@ -49,7 +50,15 @@ export default {
   data() {
     return {
       user: {},
-      show: false,
+      show: {
+        contact: false,
+        addNewFriend: false,
+        deleteFriend: false,
+        createGroup: false,
+        edit: false,
+        deleteAccount: false,
+        callMe: false
+      }
     };
   },
   methods: {
@@ -58,14 +67,25 @@ export default {
       this.user = res.data;
       this.$forceUpdate();
     },
-    showFloatBox() {
-      this.show = true;
-      this.$forceUpdate();
+    showFloatBox(featureName) {
+      for (var name in this.show) {
+        if (featureName !== String(name)) {
+          this.show[name] = false;
+        } else {
+          this.show[name] = true;
+        }
+      }
+    },
+    close() {
+      for (var name in this.show) {
+        this.show[name] = false;
+      }
     },
   },
   created() {
     this.getUser();
-  }
+  },
+
 };
 </script>
 

@@ -12,16 +12,19 @@ import service from "./static/js/service"
 import contactList from "./components/recentContactList"
 import chatItem from "./components/chatItem"
 import featureBlock from "./components/featureBlock"
-import floatBox from "./components/floatBox"
+
+import contact from "./components/feature/contact"
+
 
 Vue.use(ElementUI)
 Vue.prototype.$service = service;
 Vue.config.productionTip = false
-
+// 通用组件
 Vue.component('contact-list', contactList);
 Vue.component('chat-item', chatItem);
 Vue.component('feature-block', featureBlock);
-Vue.component('float-box', floatBox);
+// 业务逻辑组件
+Vue.component('contact', contact);
 
 new Vue({
   router,
