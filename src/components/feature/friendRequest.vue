@@ -6,22 +6,38 @@
     :before-close="handleClose"
     :center="true"
   >
-    <div style="height: 400px;max-height: 600px;">
+    <div style="height: 600px;max-height: 600px;">
       <!-- 我收到的好友请求 -->
-      <div style="height: 200px;max-height: 300px; overflow: auto;">
+      <div style="height: 300px;max-height: 300px; overflow: auto;">
         <h4>收到的好友请求</h4>
         <div v-if="receiveList.length > 0" style="max-height: 80px;">
-            <friend-item v-for="(item, index) in receiveList" v-bind:key="index" :displayName="item.other.displayName" :requestStatus="item.status" :avatar="item.other.avatar" :username="item.other.userName" :showIcon="false">
-            </friend-item>
+          <friend-item
+            v-for="(item, index) in receiveList"
+            v-bind:key="index"
+            v-on:when-update="reload"
+            :displayName="item.other.displayName"
+            :requestStatus="item.status"
+            :avatar="item.other.avatar"
+            :username="item.other.userName"
+            :showIcon="false"
+          ></friend-item>
         </div>
       </div>
       <div class="single-line"></div>
       <!-- 我发出的好友请求  -->
-      <div style="height: 200px; max-height: 300px; overflow: auto;">
+      <div style="height: 300px; max-height: 300px; overflow: auto;">
         <h4>发出的好友请求</h4>
         <div v-if="sentList.length > 0" style="max-height: 80px;">
-            <friend-item v-for="(item, index) in sentList" v-bind:key="index" :displayName="item.other.displayName" :requestStatus="item.status" :avatar="item.other.avatar" :username="item.other.userName" :showIcon="true">
-            </friend-item>
+          <friend-item
+            v-for="(item, index) in sentList"
+            v-bind:key="index"
+            v-on:when-update="reload"
+            :displayName="item.other.displayName"
+            :requestStatus="item.status"
+            :avatar="item.other.avatar"
+            :username="item.other.userName"
+            :showIcon="true"
+          ></friend-item>
         </div>
       </div>
     </div>
@@ -37,7 +53,7 @@ export default {
   data() {
     return {
       receiveList: [],
-      sentList: [],
+      sentList: []
     };
   },
   methods: {
@@ -53,6 +69,9 @@ export default {
       });
       this.sentList = res.data.relations;
     },
+    reload() {
+      this.fetchReceiveList();
+    },
     close() {
       this.$emit("close-float-box");
     },
@@ -64,13 +83,19 @@ export default {
         .catch(_ => {});
     }
   },
-  created() {
-    this.fetchReceiveList();
-    this.fetchSentList();
+  watch: {
+    isVisiable: {
+      immediate: true,
+      handler() {
+        if (this.isVisiable) {
+          this.fetchReceiveList();
+          this.fetchSentList();
+        }
+      }
+    }
   }
 };
 </script>
 
 <style>
-
 </style>
