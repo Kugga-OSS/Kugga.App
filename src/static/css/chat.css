@@ -45,6 +45,17 @@
     margin-right: 5px;
 }
 
+.friend-avatar {
+    width: 50%;
+    height: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    border-radius: 100px;
+    border: 2px solid #f1f1f1;
+    padding: 3px;
+}
+
 .avatar-div {
     width: 35%; 
     height: 100%;

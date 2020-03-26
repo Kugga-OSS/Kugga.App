@@ -40,7 +40,7 @@
                 <el-button
                   type="success"
                   icon="el-icon-plus"
-                  @click="createAddRequest(res.userName)"
+                  @click="ifCreateAddRequest(res.userName)"
                   style="margin-top: 1rem"
                   circle
                 ></el-button>
@@ -53,7 +53,6 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <!-- <el-button type="primary" @click="close">关 闭</el-button> -->
-
     </span>
   </el-dialog>
 </template>
@@ -91,17 +90,14 @@ export default {
       }
     },
     // 发送一条添加好友请求
-    async createAddRequest(userName) {
+    ifCreateAddRequest(userName) {
       this.$confirm("是否添加好友?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "已发送添加请求!"
-          });
+          this.createNewAddRequest(userName);
         })
         .catch(() => {
           this.$message({
@@ -110,23 +106,34 @@ export default {
           });
         });
     },
+    async createNewAddRequest(userName) {
+      const res = await this.$service
+        .post("/auth_api/user/add", { otherUsername: userName }, null)
+        .catch(() => {});
+      if (res && res.data) {
+        this.$message({
+            type: "success",
+            message: res.data.message
+        });
+      }
+    },
     close() {
       this.$emit("close-float-box");
     },
     clearRes() {
-        this.resList = [];
-        this.firstSearch = true;
+      this.resList = [];
+      this.firstSearch = true;
     },
     whileChange() {
-        if (String(this.form.username).trim().length === 0) {
-            this.clearRes();
-        }
+      if (String(this.form.username).trim().length === 0) {
+        this.clearRes();
+      }
     },
     handleClose(done) {
-        this.$confirm("确认关闭？")
+      this.$confirm("确认关闭？")
         .then(_ => {
           this.$emit("close-float-box");
-        })  
+        })
         .catch(_ => {});
     }
   }

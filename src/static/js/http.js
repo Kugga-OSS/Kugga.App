@@ -35,12 +35,19 @@ http.interceptors.response.use(
                     duration: 5 * 1000
                 })
                 return Promise.reject(new Error(res.message));
+            } else if (res && res.data && res.data.message) {
+                Message({
+                    message: res.data.message,
+                    type: 'error',
+                    duration: 5 * 1000
+                })
+            } else {
+                Message({
+                    message: '请求失败',
+                    type: 'error',
+                    duration: 5 * 1000
+                })
             }
-            Message({
-                message: '请求失败',
-                type: 'error',
-                duration: 5 * 1000
-            })
             return Promise.reject(new Error("请求失败"));
         } else {
             return res;

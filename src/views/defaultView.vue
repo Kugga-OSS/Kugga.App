@@ -7,6 +7,7 @@
     <!-- 监听close-float-box事件，若close-float-box出发，则在父组件中执行close -->
     <contact :isVisiable="show.contact" v-on:close-float-box="close" title="通讯录"></contact>
     <add-new-friend :isVisiable="show.addNewFriend" v-on:close-float-box="close" title="添加联系人"></add-new-friend>
+    <friend-request :isVisiable="show.friendRequest" v-on:close-float-box="close" title="好友请求"></friend-request>
     <div class="feature-container">
       <h2 style="float: left;">联系人</h2>
       <div class="feature-block-set">
@@ -21,6 +22,9 @@
         </div>
         <div @click="showFloatBox('createGroup')" class="block">
           <feature-block iconName="el-icon-chat-line-round" message="创建群组"></feature-block>
+        </div>
+        <div @click="showFloatBox('friendRequest')" class="block">
+          <feature-block iconName="el-icon-bell" message="好友请求"></feature-block>
         </div>
       </div>
     </div>
@@ -59,6 +63,7 @@ export default {
         addNewFriend: false,
         deleteFriend: false,
         createGroup: false,
+        friendRequest: false,
         edit: false,
         deleteAccount: false,
         callMe: false
