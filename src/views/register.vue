@@ -22,10 +22,10 @@
             <el-input v-model="form.username" placeholder="用户名 8-16 位的数字"></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input type="password" v-model="form.password" placeholder="密码 6-20位的字符串"></el-input>
+            <el-input type="password" v-model="form.password" placeholder="密码 6-20位的字符串" show-password></el-input>
           </el-form-item>
           <el-form-item prop="checkPassword">
-            <el-input type="password" v-model="form.checkPassword" placeholder="确认密码"></el-input>
+            <el-input type="password" v-model="form.checkPassword" placeholder="确认密码" show-password></el-input>
           </el-form-item>
           <el-form-item prop="displayName">
             <el-input v-model="form.displayName" placeholder="昵称 不超过20位的字符串"></el-input>

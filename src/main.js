@@ -17,6 +17,7 @@ import friendItem from "./components/friendItem"
 import contact from "./components/feature/contact"
 import addNewFriend from "./components/feature/addNewFriend"
 import friendRequest from "./components/feature/friendRequest"
+import edit from "./components/feature/edit"
 
 
 Vue.use(ElementUI)
@@ -31,6 +32,8 @@ Vue.component('friend-item', friendItem);
 Vue.component('contact', contact);
 Vue.component('add-new-friend', addNewFriend);
 Vue.component('friend-request', friendRequest);
+Vue.component('edit', edit);
+
 
 new Vue({
   router,

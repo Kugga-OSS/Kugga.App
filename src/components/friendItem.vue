@@ -83,6 +83,8 @@ export default {
 }
 .friend-flex:hover {
   background: #f0f0f0;
+  box-shadow: 2px 2px #888888;
+  transition: all 0.3s;
 }
 .icon-font {
   font-size: 2rem;

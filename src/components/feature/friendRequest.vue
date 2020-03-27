@@ -3,6 +3,7 @@
     :title="title"
     :visible.sync="isVisiable"
     width="40%"
+    style="min-width: 300px;"
     :before-close="handleClose"
     :center="true"
   >

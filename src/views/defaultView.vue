@@ -5,14 +5,16 @@
       <h3 class="overflow-text">欢迎回来！{{ user.displayName }} ~</h3>
     </div>
     <!-- 监听close-float-box事件，若close-float-box出发，则在父组件中执行close -->
-    <contact :isVisiable="show.contact" v-on:close-float-box="close" title="通讯录"></contact>
+    <contact :isVisiable="show.contact" v-on:close-float-box="close" title="好友列表"></contact>
     <add-new-friend :isVisiable="show.addNewFriend" v-on:close-float-box="close" title="添加联系人"></add-new-friend>
     <friend-request :isVisiable="show.friendRequest" v-on:close-float-box="close" title="好友请求"></friend-request>
+    <edit :isVisiable="show.edit" v-on:close-float-box="close" title="编辑个人信息">
+    </edit>
     <div class="feature-container">
       <h2 style="float: left;">联系人</h2>
       <div class="feature-block-set">
         <div @click="showFloatBox('contact')" class="block">
-          <feature-block iconName="el-icon-connection" message="通讯录"></feature-block>
+          <feature-block iconName="el-icon-connection" message="好友列表"></feature-block>
         </div>
         <div @click="showFloatBox('addNewFriend')" class="block">
           <feature-block iconName="el-icon-plus" message="添加联系人"></feature-block>
@@ -32,7 +34,7 @@
       <h2 style="float: left;">个人信息</h2>
       <div class="feature-block-set">
         <div @click="showFloatBox('edit')" class="block">
-          <feature-block iconName="el-icon-edit" message="编辑个人信息"></feature-block>
+          <feature-block iconName="el-icon-edit" message="个人信息"></feature-block>
         </div>
         <div @click="showFloatBox('deleteAccount')" class="block">
           <feature-block iconName="el-icon-delete" message="注销账号"></feature-block>

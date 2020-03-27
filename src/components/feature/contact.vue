@@ -6,12 +6,16 @@
     :before-close="handleClose"
     :center="true"
   >
-    <span>{{ }}</span>
-    <div></div>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="close">确 定</el-button>
-    </span>
+    <div class="friend-list" v-if="friendList.length > 0">
+      <friend-item
+        v-for="(item,index) in friendList"
+        v-bind:key="index"
+        :displayName="item.displayName"
+        :avatar="item.avatar"
+        :username="item.userName"
+        :showIcon="false"
+      ></friend-item>
+    </div>
   </el-dialog>
 </template>
 
@@ -22,11 +26,16 @@ export default {
     title: String
   },
   data() {
-    return {};
+    return {
+      friendList: []
+    };
   },
   methods: {
-    close() {
-      this.$emit("close-float-box");
+    async fetchFriendList() {
+      const res = await this.$service
+        .get("/auth_api/user/friendList", null)
+        .catch(() => {});
+      this.friendList = res.data.friendList;
     },
     handleClose(done) {
       this.$confirm("确认关闭？")
@@ -35,9 +44,24 @@ export default {
         })
         .catch(_ => {});
     }
+  },
+  watch: {
+    isVisiable: {
+      immediate: true,
+      handler() {
+        if (this.isVisiable) {
+          this.fetchFriendList();
+        }
+      }
+    }
   }
 };
 </script>
 
 <style>
+.friend-list {
+  height: 500px;
+  max-height: 500px;
+  overflow: auto;
+}
 </style>
