@@ -9,26 +9,48 @@
     <div style="height: auto; ">
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="个人信息" name="first">
-          <div class="center-btn vertical-flex">
+          <div class="vertical-flex">
             <div>
-              <img
-                src="https://kugga-storage.oss-cn-hangzhou.aliyuncs.com/avatar/default.png"
-                alt
-                class="vertical-avatar"
-              />
+              <img :src="userInfo.avatar" alt class="vertical-avatar" />
             </div>
             <div>
               <h4 style="margin: 5px 0;">
-                <br />用户名 : 1004210191
-                <br /><br />昵称 : ayang818
-                <br /><br />邮箱 : ayang818@qq.com
+                <br />
+                用户名 : {{ userInfo.userName }}
+                <br />
+                <br />
+                昵称 : {{ userInfo.displayName }}
+                <br />
+                <br />
+                邮箱 : {{ userInfo.email }}
                 <br />
               </h4>
             </div>
           </div>
         </el-tab-pane>
 
-        <el-tab-pane label="更换头像" name="second"></el-tab-pane>
+        <el-tab-pane label="更换头像" name="second">
+          <div class="vertical-flex">
+            <div>
+              <h4 style="margin: 5px 0;">点击直接上传图片</h4>
+            </div>
+            <el-upload
+              class="upload-demo"
+              drag
+              action="null"
+              :http-request="uploadAvatar"
+              :before-upload="beforeUpload"
+              :multiple="false"
+            >
+              <i class="el-icon-upload"></i>
+              <div class="el-upload__text">
+                将文件拖到此处，或
+                <em>点击上传</em>
+              </div>
+              <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+            </el-upload>
+          </div>
+        </el-tab-pane>
 
         <el-tab-pane label="修改密码" name="third">
           <el-form :model="passForm" :rules="passRules" @validate="checkForm">
@@ -52,18 +74,32 @@
               ></el-input>
             </el-form-item>
             <div class="center-btn">
-              <el-button @click="submit('password')" type="primary" :disabled="disableSubmitPass" round>提交</el-button>
+              <el-button
+                @click="submit('password')"
+                type="primary"
+                :disabled="disableSubmitPass"
+                round
+              >提交</el-button>
             </div>
           </el-form>
         </el-tab-pane>
 
         <el-tab-pane label="修改昵称" name="forth">
-          <el-form :model="displayNameForm" :rules="displayNameRules" @validate="checkDisplayNameForm">
+          <el-form
+            :model="displayNameForm"
+            :rules="displayNameRules"
+            @validate="checkDisplayNameForm"
+          >
             <el-form-item label="修改昵称" prop="displayName">
               <el-input v-model="displayNameForm.displayName" autocomplete="off"></el-input>
             </el-form-item>
             <div class="center-btn">
-              <el-button @click="submit('displayName')" type="primary" :disabled="disableSubmitDisplayName" round>提交</el-button>
+              <el-button
+                @click="submit('displayName')"
+                type="primary"
+                :disabled="disableSubmitDisplayName"
+                round
+              >提交</el-button>
             </div>
           </el-form>
         </el-tab-pane>
@@ -73,13 +109,16 @@
               <el-input v-model="emailForm.email" autocomplete="off"></el-input>
             </el-form-item>
             <div class="center-btn">
-              <el-button @click="submit('email')" type="primary" :disabled="disableSubmitEmail" round>提交</el-button>
+              <el-button
+                @click="submit('email')"
+                type="primary"
+                :disabled="disableSubmitEmail"
+                round
+              >提交</el-button>
             </div>
           </el-form>
         </el-tab-pane>
-
       </el-tabs>
-
     </div>
   </el-dialog>
 </template>
@@ -139,6 +178,14 @@ export default {
     };
     return {
       activeName: "first",
+      // 用户信息
+      userInfo: {
+        userName: "",
+        displayName: "",
+        avatar: "",
+        email: "",
+        state: ""
+      },
       // 修改密码相关状态
       passForm: {
         originPass: "",
@@ -167,24 +214,43 @@ export default {
       },
       // 修改昵称相关状态
       displayNameForm: {
-          email: "" 
+        email: ""
       },
       disableSubmitDisplayName: true,
       displayNameRules: {
-          displayName: [{ validator: checkDisplayName, trigger: "blur" }]
+        displayName: [{ validator: checkDisplayName, trigger: "blur" }]
       }
+      // 关于头像相关状态
     };
   },
   methods: {
-    async submit(type) {
-
+    async submit(type) {},
+    async getUser() {
+      const res = await this.$service.get("/auth_api/user").catch(() => {});
+      this.userInfo = res.data;
+    },
+    async uploadAvatar(param) {
+        const file = param.file;
+        const res = await this.$service.upload("/auth_api/user/avatar", file);
+        if (res && res.data && res.data.message) {
+          this.$message({
+            message: res.data.message,
+            type: "success"
+          })
+        }
+        this.userInfo.avatar = res.data.url;
+    },
+    beforeUpload(file) {
+      console.log(file.type);
+        if (file.type != "image/png" && file.type != "image/jpg" && file.type != "image/jpeg") {
+            this.$message.error("请上传图片文件！");
+            return false;
+        }
     },
     close() {
       this.$emit("close-float-box");
     },
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
+    handleClick(tab, event) {},
     handleClose(done) {
       this.$confirm("确认关闭？")
         .then(_ => {
@@ -208,9 +274,22 @@ export default {
       }
     },
     checkDisplayNameForm(prop, isSuccess, msg) {
-        if (isSuccess === true) {
-            this.disableSubmitDisplayName = false;
+      if (isSuccess === true) {
+        this.disableSubmitDisplayName = false;
+      }
+    },
+    handleAvatarSuccess(file) {
+        this.$message.success("更换头像成功");
+    }
+  },
+  watch: {
+    isVisiable: {
+      immediate: true,
+      handler() {
+        if (this.isVisiable) {
+          this.getUser();
         }
+      }
     }
   }
 };
@@ -222,6 +301,7 @@ export default {
   justify-content: center;
 }
 .vertical-flex {
+  display: flex;
   flex-direction: column;
   align-items: center;
 }

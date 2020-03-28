@@ -1,7 +1,7 @@
 <template>
   <div class="friend-flex">
     <div style="display: flex; justify-content: flex-start;">
-      <div style="width: 30%;">
+      <div style="width: 40%;">
         <img :src="avatar" class="friend-avatar" />
       </div>
       <div style="margin-top: 25px; margin-left: 5px;" class="overflow-text">
@@ -19,6 +19,14 @@
       <el-button @click="agree" type="success" icon="el-icon-check" style="margin: 3px 3px;" circle></el-button>
       <el-button @click="reject" type="info" icon="el-icon-close" style="margin: 3px 3px;" circle></el-button>
     </div>
+    <div v-if="addBtn == true" style="min-width: 50px;">
+      <el-button
+        type="success"
+        icon="el-icon-plus"
+        @click="ifCreateAddRequest(username)"
+        circle
+      ></el-button>
+    </div>
   </div>
 </template>
 
@@ -29,7 +37,8 @@ export default {
     requestStatus: Number,
     avatar: String,
     username: String,
-    showIcon: Boolean
+    showIcon: Boolean,
+    addBtn: Boolean
   },
   data() {
     return {
@@ -70,6 +79,34 @@ export default {
         });
       }
       this.$emit("when-update");
+    },
+    // 发送一条添加好友请求
+    ifCreateAddRequest(userName) {
+      this.$confirm("是否添加好友?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.createNewAddRequest(userName);
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消添加"
+          });
+        });
+    },
+    async createNewAddRequest(userName) {
+      const res = await this.$service
+        .post("/auth_api/user/add", { otherUsername: userName }, null)
+        .catch(() => {});
+      if (res && res.data) {
+        this.$message({
+          type: "success",
+          message: res.data.message
+        });
+      }
     }
   }
 };
@@ -78,7 +115,7 @@ export default {
 <style>
 .friend-flex {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: center;
 }
 .friend-flex:hover {

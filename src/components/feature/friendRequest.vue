@@ -77,11 +77,7 @@ export default {
       this.$emit("close-float-box");
     },
     handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then(_ => {
-          this.$emit("close-float-box");
-        })
-        .catch(_ => {});
+      this.$emit("close-float-box");
     }
   },
   watch: {

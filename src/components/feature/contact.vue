@@ -38,11 +38,7 @@ export default {
       this.friendList = res.data.friendList;
     },
     handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then(_ => {
-          this.$emit("close-float-box");
-        })
-        .catch(_ => {});
+      this.$emit("close-float-box");
     }
   },
   watch: {

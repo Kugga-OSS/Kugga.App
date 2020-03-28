@@ -27,10 +27,20 @@
           <p class="span-text" v-if="firstSearch == false">你查找的用户不存在</p>
         </div>
         <div v-if="resList.length !== 0">
-          <div v-for="res in resList" v-bind:key="res.username">
+          <friend-item
+            v-for="(item,index) in resList"
+            v-bind:key="index"
+            :displayName="item.displayName"
+            :avatar="item.avatar"
+            :username="item.userName"
+            :showIcon="false"
+            :addBtn="true"
+          >
+          </friend-item>
+          <!-- <div v-for="res in resList" v-bind:key="res.username">
             <div class="addNewUser-flex-start">
               <div style="width: 30%; height: auto;">
-                <img :src="res.avatar" alt class="avatar" />
+                <img :src="res.avatar" alt class="friend-avatar" />
               </div>
               <div style="width: 40%;">
                 <p>用户名 : {{res.userName}}</p>
@@ -47,7 +57,7 @@
               </div>
             </div>
             <div class="line"></div>
-          </div>
+          </div>-->
         </div>
       </div>
     </div>
@@ -89,34 +99,7 @@ export default {
         this.resList = res.data.resList;
       }
     },
-    // 发送一条添加好友请求
-    ifCreateAddRequest(userName) {
-      this.$confirm("是否添加好友?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.createNewAddRequest(userName);
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消添加"
-          });
-        });
-    },
-    async createNewAddRequest(userName) {
-      const res = await this.$service
-        .post("/auth_api/user/add", { otherUsername: userName }, null)
-        .catch(() => {});
-      if (res && res.data) {
-        this.$message({
-            type: "success",
-            message: res.data.message
-        });
-      }
-    },
+    
     close() {
       this.$emit("close-float-box");
     },
@@ -130,11 +113,7 @@ export default {
       }
     },
     handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then(_ => {
-          this.$emit("close-float-box");
-        })
-        .catch(_ => {});
+      this.$emit("close-float-box");
     }
   }
 };

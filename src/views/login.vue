@@ -95,7 +95,6 @@ export default {
           password: this.form.password
         })
         .catch(err => {});
-      console.log(res);
       const token = res.data.jwt;
       if (token != null) {
         localStorage.token = token;
@@ -111,7 +110,6 @@ export default {
     },
     async getUser() {
       const res = await this.$service.get("/auth_api/user").catch(() => {});
-      console.log(res.data.state);
       if (res && res.data && String(res.data.state) == "1") {
         this.$router.push({name : "defaultView"});
       }
