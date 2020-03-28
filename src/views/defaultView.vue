@@ -2,7 +2,7 @@
   <!-- 主要功能页面 -->
   <div class="default">
     <div>
-      <h3 class="overflow-text">欢迎回来！{{ user.displayName }} ~</h3>
+      <h3 class="overflow-text">欢迎回来！{{ user.displayName }} ！</h3>
     </div>
     <!-- 监听close-float-box事件，若close-float-box出发，则在父组件中执行close -->
     <contact :isVisiable="show.contact" v-on:close-float-box="close" title="好友列表" v-on:push-item="pushItem"></contact>

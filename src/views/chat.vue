@@ -36,7 +36,14 @@ export default {
   methods: {
     reload() {},
     addItem(item) {
-      this.recentChatList.push(item);
+      var isContain = false;
+      for (var entry of this.recentChatList) {
+        if (item.userName === entry.userName) {
+          isContain = true;
+          break;
+        }
+      }
+      !isContain && this.recentChatList.push(item);
       this.$router.push({name: "chatMain", params: {userInfo: item, id: String(Math.random() * 1e16)}});
     },
     chatWith(item) {
