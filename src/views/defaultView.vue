@@ -5,7 +5,7 @@
       <h3 class="overflow-text">欢迎回来！{{ user.displayName }} ~</h3>
     </div>
     <!-- 监听close-float-box事件，若close-float-box出发，则在父组件中执行close -->
-    <contact :isVisiable="show.contact" v-on:close-float-box="close" title="好友列表"></contact>
+    <contact :isVisiable="show.contact" v-on:close-float-box="close" title="好友列表" v-on:push-item="pushItem"></contact>
     <add-new-friend :isVisiable="show.addNewFriend" v-on:close-float-box="close" title="添加联系人"></add-new-friend>
     <friend-request :isVisiable="show.friendRequest" v-on:close-float-box="close" title="好友请求"></friend-request>
     <edit :isVisiable="show.edit" v-on:close-float-box="close" title="编辑个人信息">
@@ -86,6 +86,9 @@ export default {
           this.show[name] = true;
         }
       }
+    },
+    pushItem(item) {
+      this.$emit("push-item", item);
     },
     close() {
       for (var name in this.show) {

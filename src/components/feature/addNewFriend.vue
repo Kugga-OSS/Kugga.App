@@ -27,37 +27,16 @@
           <p class="span-text" v-if="firstSearch == false">你查找的用户不存在</p>
         </div>
         <div v-if="resList.length !== 0">
-          <friend-item
-            v-for="(item,index) in resList"
-            v-bind:key="index"
-            :displayName="item.displayName"
-            :avatar="item.avatar"
-            :username="item.userName"
-            :showIcon="false"
-            :addBtn="true"
-          >
-          </friend-item>
-          <!-- <div v-for="res in resList" v-bind:key="res.username">
-            <div class="addNewUser-flex-start">
-              <div style="width: 30%; height: auto;">
-                <img :src="res.avatar" alt class="friend-avatar" />
-              </div>
-              <div style="width: 40%;">
-                <p>用户名 : {{res.userName}}</p>
-                <p>昵称 : {{res.displayName}}</p>
-              </div>
-              <div style="width: 20%;">
-                <el-button
-                  type="success"
-                  icon="el-icon-plus"
-                  @click="ifCreateAddRequest(res.userName)"
-                  style="margin-top: 1rem"
-                  circle
-                ></el-button>
-              </div>
-            </div>
+          <div v-for="(item,index) in resList" v-bind:key="index">
+            <friend-item
+              :displayName="item.displayName"
+              :avatar="item.avatar"
+              :username="item.userName"
+              :showIcon="false"
+              :addBtn="true"
+            ></friend-item>
             <div class="line"></div>
-          </div>-->
+          </div>
         </div>
       </div>
     </div>
@@ -99,7 +78,7 @@ export default {
         this.resList = res.data.resList;
       }
     },
-    
+
     close() {
       this.$emit("close-float-box");
     },

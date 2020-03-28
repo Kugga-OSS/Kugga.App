@@ -10,7 +10,7 @@
             </el-col>
             <el-col :span="10" :offset="5" style="height: 100%;">
                 <div>
-                    <p class="chat-banner-title overflow-text">hello world123211111111</p>
+                    <p class="chat-banner-title overflow-text">{{ userInfo.displayName }}</p>
                 </div>
             </el-col>
           </el-row>
@@ -25,7 +25,11 @@
 <script>
 export default {
     props: {
-        people: String
+        userInfo: {
+            displayName: "",
+            avatar: "",
+            userName: "",
+        },
     },
     data() {
         return {

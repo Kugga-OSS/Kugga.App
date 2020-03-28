@@ -7,14 +7,15 @@
     :center="true"
   >
     <div class="friend-list" v-if="friendList.length > 0">
+      <div v-for="(item,index) in friendList" v-bind:key="index" @dblclick="pushToRecent(item)">
       <friend-item
-        v-for="(item,index) in friendList"
-        v-bind:key="index"
         :displayName="item.displayName"
         :avatar="item.avatar"
         :username="item.userName"
         :showIcon="false"
       ></friend-item>
+      <div class="line"></div>
+      </div>
     </div>
   </el-dialog>
 </template>
@@ -31,6 +32,9 @@ export default {
     };
   },
   methods: {
+    pushToRecent(item) {
+      this.$emit("push-item", item);
+    },
     async fetchFriendList() {
       const res = await this.$service
         .get("/auth_api/user/friendList", null)

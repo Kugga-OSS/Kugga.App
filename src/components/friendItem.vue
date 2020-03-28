@@ -1,15 +1,15 @@
 <template>
   <div class="friend-flex">
-    <div style="display: flex; justify-content: flex-start;">
+    <div style="display: flex; justify-content: flex-start; align-items: center;">
       <div style="width: 40%;">
         <img :src="avatar" class="friend-avatar" />
       </div>
-      <div style="margin-top: 25px; margin-left: 5px;" class="overflow-text">
-        用户名 : {{username}}
-        <br />
-        昵称 : {{displayName}}
+      <div style="margin-left: 5px; width: 80%;" class="overflow-text" v-if="type != 'recentChatList'">
+        <div>用户名 : {{username}}</div>
+        <div>昵称 : {{displayName}}</div>
       </div>
     </div>
+
     <div v-if="showIcon === true  || requestStatus !== wait">
       <i v-if="requestStatus == pass" class="el-icon-success icon-font status-success"></i>
       <i v-if="requestStatus == wait" class="el-icon-loading icon-font statuc-wait"></i>
@@ -20,12 +20,7 @@
       <el-button @click="reject" type="info" icon="el-icon-close" style="margin: 3px 3px;" circle></el-button>
     </div>
     <div v-if="addBtn == true" style="min-width: 50px;">
-      <el-button
-        type="success"
-        icon="el-icon-plus"
-        @click="ifCreateAddRequest(username)"
-        circle
-      ></el-button>
+      <el-button type="success" icon="el-icon-plus" @click="ifCreateAddRequest(username)" circle></el-button>
     </div>
   </div>
 </template>
@@ -38,7 +33,8 @@ export default {
     avatar: String,
     username: String,
     showIcon: Boolean,
-    addBtn: Boolean
+    addBtn: Boolean,
+    type: String
   },
   data() {
     return {

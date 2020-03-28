@@ -39,7 +39,7 @@ const routes = [
         component: defaultView
       },
       {
-        path: 'with/:people',
+        path: 'with/:id',
         name: 'chatMain',
         component: chatMain,
         props: true
