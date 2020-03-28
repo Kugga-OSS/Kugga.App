@@ -4,6 +4,7 @@ import router from '../../router/index'
 var axios = require("axios");
 axios.defaults.withCredentials=true
 
+// 这里的应该是从配置中读出来的，但是暂时不知道怎么做
 const http = axios.create({
     baseURL: "http://localhost:5555",
     timeout: 5000

@@ -2,7 +2,7 @@
   <el-dialog
     :title="title"
     :visible.sync="isVisiable"
-    width="40%"
+    width="30%"
     :before-close="handleClose"
     :center="true"
   >

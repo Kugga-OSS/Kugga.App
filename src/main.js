@@ -2,6 +2,9 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import ElementUI from 'element-ui'
+import VueMarkdown from 'vue-markdown'
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import './static/css/global.css'
 import './static/css/login.css'
@@ -21,6 +24,8 @@ import edit from "./components/feature/edit"
 
 
 Vue.use(ElementUI)
+Vue.use(mavonEditor)
+// 原型链上绑定 service http请求代码
 Vue.prototype.$service = service;
 Vue.config.productionTip = false
 // 通用组件
@@ -34,6 +39,8 @@ Vue.component('add-new-friend', addNewFriend);
 Vue.component('friend-request', friendRequest);
 Vue.component('edit', edit);
 
+// markdown 渲染组件
+Vue.component("markdown", VueMarkdown);
 
 new Vue({
   router,
