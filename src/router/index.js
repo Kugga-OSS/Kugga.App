@@ -36,7 +36,7 @@ const routes = [
       {
         path: 'with',
         name: 'defaultView',
-        component: defaultView
+        component: defaultView,
       },
       {
         path: 'with/:id',

@@ -5,7 +5,7 @@
       <el-row style="height: 10%;" class="chat-banner">
         <el-col :span="2">
           <div style="padding: 5px;">
-            <el-button icon="el-icon-close" @click="back" circle></el-button>
+            <el-button icon="el-icon-close" @click="back" accesskey="w" circle></el-button>
           </div>
         </el-col>
         <el-col :span="10" :offset="5" style="height: 100%;">
@@ -15,7 +15,7 @@
         </el-col>
       </el-row>
       <div class="msg-container" style="height: 90%; weight: 100%; overflow: auto;">
-          <markdown :source="msgDto.content"></markdown>
+        <markdown :source="msgDto.content"></markdown>
       </div>
     </el-row>
     <div class="line"></div>
@@ -23,7 +23,7 @@
     <div style="width: 100%; height: 0px; background: black;" @click="send" accesskey="/"></div>
     <!-- 消息输入区域 -->
     <el-row style="height: 35%;">
-        <mavon-editor class="editor" v-model="msgDto.content" codeStyle="monokai-sublime"/>
+      <mavon-editor class="editor" v-model="msgDto.content" codeStyle="monokai-sublime" />
     </el-row>
   </div>
 </template>
@@ -34,17 +34,20 @@ export default {
     userInfo: {
       displayName: "",
       avatar: "",
-      userName: ""
+      userName: "",
+      email: "",
+      uid: "",
+      state: ""
     }
   },
   data() {
     return {
       msgDto: {
-          senderUid: "",
-          receiverUid: "",
-          content: "",
-          contentType: "",
-          msgType: ""
+        senderUid: "",
+        receiverUid: "",
+        content: "",
+        contentType: "",
+        msgType: ""
       }
     };
   },
@@ -53,8 +56,16 @@ export default {
       this.$router.push({ name: "defaultView" });
     },
     send() {
-        console.log("发送消息");
-        this.msgDto.content = "";
+      this.$emit("send-msg", {
+        senderUid: "",
+        reveiverUid: this.userInfo.uid,
+        content: this.msgDto.content,
+        contentType: "",
+        msgType: "",
+        state: "1"
+      });
+      // 将这条消息刷到屏幕中，设置一个等待回应的图标，若回应成功，删掉取消回应的图标
+      this.msgDto.content = "";
     }
   }
 };
@@ -62,7 +73,7 @@ export default {
 
 <style>
 .editor {
-    max-height: 100%!important;
-    min-height: 100%!important;
+  max-height: 100% !important;
+  min-height: 100% !important;
 }
 </style>

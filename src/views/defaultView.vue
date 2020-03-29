@@ -2,7 +2,7 @@
   <!-- 主要功能页面 -->
   <div class="default">
     <div>
-      <h3 class="overflow-text">欢迎回来！{{ user.displayName }} ！</h3>
+      <h3 class="overflow-text">欢迎回来！{{ ownerInfo.displayName }} ！</h3>
     </div>
     <!-- 监听close-float-box事件，若close-float-box出发，则在父组件中执行close -->
     <contact :isVisiable="show.contact" v-on:close-float-box="close" title="好友列表" v-on:push-item="pushItem"></contact>
@@ -57,9 +57,12 @@
 
 <script>
 export default {
+  props: {
+  },
   data() {
     return {
-      user: {},
+      ownerInfo: {},
+
       show: {
         contact: false,
         addNewFriend: false,
@@ -75,8 +78,7 @@ export default {
   methods: {
     async getUser() {
       const res = await this.$service.get("/auth_api/user").catch(() => {});
-      this.user = res.data;
-      this.$forceUpdate();
+      this.ownerInfo = res.data;
     },
     showFloatBox(featureName) {
       for (var name in this.show) {
@@ -120,9 +122,9 @@ export default {
       });
     }
   },
-  created() {
+  mounted() {
     this.getUser();
-  }
+  },
 };
 </script>
 

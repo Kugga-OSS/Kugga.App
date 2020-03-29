@@ -98,10 +98,12 @@ export default {
       const token = res.data.jwt;
       if (token != null) {
         localStorage.token = token;
-        this.$router.push({ name: "defaultView" });
+        this.$router.push({
+          name: "defaultView",
+        });
         this.$notify({
           title: "登录成功",
-          type: "success",
+          type: "success"
         });
       }
     },
@@ -109,14 +111,19 @@ export default {
       this.$router.push({ name: "register" });
     },
     async getUser() {
-      const res = await this.$service.get("/auth_api/user").catch(() => {});
-      if (res && res.data && String(res.data.state) == "1") {
-        this.$router.push({name : "defaultView"});
+      const userInfo = await this.$service
+        .get("/auth_api/user")
+        .catch(() => {});
+      if (userInfo && userInfo.data && String(userInfo.data.state) == "1") {
+        this.$router.push({
+          name: "defaultView",
+          params: { ownerInfo: userInfo.data }
+        });
       }
-    } 
+    }
   },
   created() {
-    if (localStorage  && localStorage.token) {
+    if (localStorage && localStorage.token) {
       const res = this.getUser();
     }
     if (this.username != null) {
