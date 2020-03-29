@@ -132,13 +132,10 @@ export default {
     open() {
       console.log("连接建立成功");
       // 这步操作和stackoverflow上学了一手
-      var uid;
       (async () => {
-        uid = await this.getUser();
-      })()
-      this.websocket.send(
-        JSON.stringify({ senderUid: uid, msgType: "1" })
-      );
+        var uid = await this.getUser();
+        this.websocket.send(JSON.stringify({ senderUid: uid, msgType: "1" }));
+      })();
     },
     error() {
       console.log("连接错误");
@@ -161,7 +158,7 @@ export default {
     this.init();
   },
   destroyed() {
-    
+    this.websocket.close();
   }
 };
 </script>
