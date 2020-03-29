@@ -33,7 +33,7 @@
 </template>
 
 <script>
-// 基本上所有全局状态的维护都是保存在这个次根组件中
+// 基本上所有通信需要的全局状态都是保存在这个次根组件中
 import base64url from "base64url";
 export default {
   data() {
@@ -41,7 +41,6 @@ export default {
       // websocket相关状态
       websocket: "",
       wspath: "ws://localhost:10086/ws",
-      online: false,
 
       // 侧边栏的最近联系人列表项
       eachItem: {
@@ -53,7 +52,7 @@ export default {
         email: "",
         state: ""
       },
-      // 最近联系人列表
+      // 侧边栏的最近联系人列表
       recentChatList: [],
       // 自己的用户信息
       ownerInfo: {
@@ -112,7 +111,9 @@ export default {
     async getUser() {
       const res = await this.$service.get("/auth_api/user").catch(() => {});
       this.ownerInfo = res.data;
+      return res.data.uid;
     },
+    // 初始化websocket
     init() {
       if (typeof WebSocket === "undefined") {
         alert("您的浏览器不支持我们的站点，请选择Chrome或Firefox浏览器！");
@@ -130,6 +131,14 @@ export default {
     },
     open() {
       console.log("连接建立成功");
+      // 这步操作和stackoverflow上学了一手
+      var uid;
+      (async () => {
+        uid = await this.getUser();
+      })()
+      this.websocket.send(
+        JSON.stringify({ senderUid: uid, msgType: "1" })
+      );
     },
     error() {
       console.log("连接错误");
@@ -139,11 +148,6 @@ export default {
     },
     // 发送消息
     send(msgDto) {
-      if (!this.online) {
-        // 发送上线请求
-        this.websocket.send(JSON.stringify({senderUid : this.ownerInfo.uid, msgType: "1"}));
-        this.online = true;
-      }
       this.websocket.send(msgDto);
     },
     close() {
@@ -155,9 +159,10 @@ export default {
   },
   created() {
     this.init();
-    this.getUser();
   },
-  destroyed() {}
+  destroyed() {
+    
+  }
 };
 </script>
 
