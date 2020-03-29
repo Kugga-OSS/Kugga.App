@@ -41,6 +41,7 @@ export default {
       // websocket相关状态
       websocket: "",
       wspath: "ws://localhost:10086/ws",
+      online: false,
 
       // 侧边栏的最近联系人列表项
       eachItem: {
@@ -61,8 +62,8 @@ export default {
         uid: "",
         email: "",
         avatar: "",
-        displayName: "",
-      },
+        displayName: ""
+      }
     };
   },
   methods: {
@@ -72,8 +73,11 @@ export default {
       msgDto.senderUid = this.ownerInfo.uid;
       // 1 代表默认markdown形式
       msgDto.contentType = "1";
-      // 1 表示文本
-      msgDto.msgType = "1";
+      // ONLINE = 1       上线请求
+      // NEWMSG = 2       新消息
+      // ACK = 3          对某条消息的ACK
+      // HEARTBEAT = 4    心跳反馈
+      msgDto.msgType = "2";
       this.send(JSON.stringify(msgDto));
     },
     // 往侧边栏先判重再加入最近联系人
@@ -111,45 +115,49 @@ export default {
     },
     init() {
       if (typeof WebSocket === "undefined") {
-        alert("您的浏览器不支持socket");
+        alert("您的浏览器不支持我们的站点，请选择Chrome或Firefox浏览器！");
       } else {
         // 实例化socket
-        this.socket = new WebSocket(this.wspath);
+        this.websocket = new WebSocket(this.wspath);
         // 监听socket连接
-        this.socket.onopen = this.open;
+        this.websocket.onopen = this.open;
         // 监听socket错误信息
-        this.socket.onerror = this.error;
+        this.websocket.onerror = this.error;
         // 监听socket消息
-        this.socket.onmessage = this.getMessage;
+        this.websocket.onmessage = this.getMessage;
+        this.websocket.onclose = this.close;
       }
     },
     open() {
-      console.log("socket连接成功");
+      console.log("连接建立成功");
     },
     error() {
       console.log("连接错误");
     },
     getMessage(msg) {
-      console.log(msg.data);
+      alert(msg);
     },
     // 发送消息
     send(msgDto) {
-      this.socket.send(msgDto);
+      if (!this.online) {
+        // 发送上线请求
+        this.websocket.send(JSON.stringify({senderUid : this.ownerInfo.uid, msgType: "1"}));
+        this.online = true;
+      }
+      this.websocket.send(msgDto);
     },
     close() {
-      console.log("socket已经关闭");
+      console.log("连接已经关闭");
     },
     generateMsg(msgDto) {
       console.log(msgDto);
     }
   },
-  mounted() {
+  created() {
     this.init();
     this.getUser();
   },
-  destroyed() {
-    this.websocket.onclose = this.close;
-  }
+  destroyed() {}
 };
 </script>
 

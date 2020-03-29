@@ -58,7 +58,7 @@ export default {
     send() {
       this.$emit("send-msg", {
         senderUid: "",
-        reveiverUid: this.userInfo.uid,
+        receiverUid: this.userInfo.uid,
         content: this.msgDto.content,
         contentType: "",
         msgType: "",
