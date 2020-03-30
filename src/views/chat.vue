@@ -26,7 +26,11 @@
 
       <el-col :span="19" style="height: 100%;">
         <!-- 此处的router-view 可能指向一个聊天窗口，也可能指向默认的功能界面 -->
-        <router-view v-on:push-item="addItem" v-on:send-msg="sendMsg"></router-view>
+        <router-view
+          v-on:push-item="addItem"
+          v-on:send-msg="sendMsg"
+          v-on:send-new-request="pushNewFriendRequest"
+        ></router-view>
       </el-col>
     </el-row>
   </div>
@@ -35,10 +39,18 @@
 <script>
 // 基本上所有通信需要的全局状态都是保存在这个次根组件中
 import base64url from "base64url";
+const msgType = {
+  heartbeat: "4",
+  friendRequest: "5"
+};
 const heartBeat = {
   content: "heartbeat:ping",
-  msgType: "4"
+  msgType: msgType.heartBeat
 };
+const friendReqStruct = {
+  content: null,
+  msgType: msgType.friendRequest,
+}
 const hbStr = JSON.stringify(heartBeat);
 const heartCheck = {
   // 每20秒发送心跳
@@ -52,7 +64,6 @@ const heartCheck = {
     this.serverTimer && clearTimeout(this.serverTimer);
   },
   start(ws) {
-    console.log("开启心跳");
     this.reset();
     this.timer = setTimeout(() => {
       // 发送心跳
@@ -93,7 +104,7 @@ export default {
         email: "",
         avatar: "",
         displayName: ""
-      }
+      },
     };
   },
   methods: {
@@ -144,6 +155,20 @@ export default {
       this.ownerInfo = res.data;
       return res.data.uid;
     },
+    // 推送好友请求提示
+    pushNewFriendRequest(uid) {
+      friendReqStruct.content = uid;
+      const req = JSON.stringify(friendReqStruct);
+      this.websocket.send(req);
+    },
+    showNewFriendRequestNotify(msg) {
+      this.$notify({
+        message: msg.data,
+        duration: 0,
+        title: "好友申请",
+        type: "info"
+      })
+    },
     // ================  以下是Websocket相关方法  ================
     // 初始化websocket
     init() {
@@ -177,9 +202,22 @@ export default {
       this.reconnect();
     },
     getMessage(msg) {
-      console.log(msg);
+      const data = msg.data;
+      const msgObj = JSON.parse(data);
+      console.log(msgObj);
+      switch (String(msgObj.msgType)) {
+        // 收到了心跳回应，重置心跳计时器即可
+        case msgType.heartbeat:
+          heartCheck.start(this.websocket);
+          break;
+        // 好友请求
+        case msgType.friendRequest:
+          this.showNewFriendRequestNotify(msgObj);
+          break;
+        default:
+          break;
+      }
       // 重置心跳
-      heartCheck.start(this.websocket);
     },
     // 发送消息
     send(msgDto) {

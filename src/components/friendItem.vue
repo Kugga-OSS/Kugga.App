@@ -4,7 +4,11 @@
       <div style="width: 40%;">
         <img :src="avatar" class="friend-avatar" />
       </div>
-      <div style="margin-left: 5px; width: 80%;" class="overflow-text" v-if="type != 'recentChatList'">
+      <div
+        style="margin-left: 5px; width: 80%;"
+        class="overflow-text"
+        v-if="type != 'recentChatList'"
+      >
         <div>用户名 : {{username}}</div>
         <div>昵称 : {{displayName}}</div>
       </div>
@@ -34,7 +38,8 @@ export default {
     username: String,
     showIcon: Boolean,
     addBtn: Boolean,
-    type: String
+    type: String,
+    uid: Number
   },
   data() {
     return {
@@ -98,6 +103,8 @@ export default {
         .post("/auth_api/user/add", { otherUsername: userName }, null)
         .catch(() => {});
       if (res && res.data) {
+        // 这次http请求返回结果合法，则向上回调，通过websocket对目标user发送提示
+        this.$emit("send-new-request", this.uid);
         this.$message({
           type: "success",
           message: res.data.message

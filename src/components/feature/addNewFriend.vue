@@ -29,9 +29,11 @@
         <div v-if="resList.length !== 0">
           <div v-for="(item,index) in resList" v-bind:key="index">
             <friend-item
+              v-on:send-new-request="sendNewRequest"
               :displayName="item.displayName"
               :avatar="item.avatar"
               :username="item.userName"
+              :uid="item.uid"
               :showIcon="false"
               :addBtn="true"
             ></friend-item>
@@ -78,7 +80,6 @@ export default {
         this.resList = res.data.resList;
       }
     },
-
     close() {
       this.$emit("close-float-box");
     },
@@ -90,6 +91,9 @@ export default {
       if (String(this.form.username).trim().length === 0) {
         this.clearRes();
       }
+    },
+    sendNewRequest(uid) {
+      this.$emit("send-new-request", uid);
     },
     handleClose(done) {
       this.$emit("close-float-box");

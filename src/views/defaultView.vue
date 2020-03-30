@@ -6,7 +6,7 @@
     </div>
     <!-- 监听close-float-box事件，若close-float-box出发，则在父组件中执行close -->
     <contact :isVisiable="show.contact" v-on:close-float-box="close" title="好友列表" v-on:push-item="pushItem"></contact>
-    <add-new-friend :isVisiable="show.addNewFriend" v-on:close-float-box="close" title="添加联系人"></add-new-friend>
+    <add-new-friend :isVisiable="show.addNewFriend" v-on:close-float-box="close" v-on:send-new-request="sendNewRequest" title="添加联系人"></add-new-friend>
     <friend-request :isVisiable="show.friendRequest" v-on:close-float-box="close" title="好友请求"></friend-request>
     <edit :isVisiable="show.edit" v-on:close-float-box="close" title="编辑个人信息">
     </edit>
@@ -120,6 +120,9 @@ export default {
         message: "已退出登录",
         type: "success"
       });
+    },
+    sendNewRequest(uid) {
+      this.$emit("send-new-request", uid);
     }
   },
   mounted() {
