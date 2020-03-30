@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div style="margin-bottom: 5px;">
     <div class="feature-block">
-      <span class="feature-icon" :class="iconName"></span>
+      <span class="feature-icon"  :class="iconName"></span>
     </div>
     <div class="feature-font">{{ message }}</div>
   </div>
@@ -27,13 +27,14 @@ export default {
     height: 80px;
     width: 80px;
     background: #ffffff;
-    border: 1px solid rgba(145,148,163,1);
-    border-radius: 5px;
+    border-radius: 100px;
     margin-bottom: 5px;
 }
 
 .feature-block:hover {
     background: #f0f0f0;
+    border: 1px solid rgba(145,148,163,1);
+    margin-bottom: 3px;
 }
 
 .feature-icon {
