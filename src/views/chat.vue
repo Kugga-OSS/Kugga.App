@@ -49,8 +49,8 @@ const heartBeat = {
 };
 const friendReqStruct = {
   content: null,
-  msgType: msgType.friendRequest,
-}
+  msgType: msgType.friendRequest
+};
 const hbStr = JSON.stringify(heartBeat);
 const heartCheck = {
   // 每20秒发送心跳
@@ -104,7 +104,7 @@ export default {
         email: "",
         avatar: "",
         displayName: ""
-      },
+      }
     };
   },
   methods: {
@@ -131,23 +131,27 @@ export default {
         }
       }
       !isContain && this.recentChatList.push(item);
-      this.$router.push({
-        name: "chatMain",
-        params: {
-          userInfo: item,
-          id: base64url.encode("username:" + String(item.userName))
-        }
-      });
+      try {
+        this.$router.push({
+          name: "chatMain",
+          params: {
+            userInfo: item,
+            id: base64url.encode(String(item.userName))
+          }
+        });
+      } catch {return}
     },
     // 进入和某个好友的聊天界面
     chatWith(item) {
-      this.$router.push({
-        name: "chatMain",
-        params: {
-          userInfo: item,
-          id: base64url.encode("username:" + String(item.userName))
-        }
-      });
+      try {
+        this.$router.push({
+          name: "chatMain",
+          params: {
+            userInfo: item,
+            id: base64url.encode(String(item.userName))
+          }
+        });
+      } catch {return}
     },
     // 获取自己的信息
     async getUser() {
@@ -167,7 +171,7 @@ export default {
         duration: 0,
         title: "好友申请",
         type: "info"
-      })
+      });
     },
     // ================  以下是Websocket相关方法  ================
     // 初始化websocket
@@ -204,7 +208,6 @@ export default {
     getMessage(msg) {
       const data = msg.data;
       const msgObj = JSON.parse(data);
-      console.log(msgObj);
       switch (String(msgObj.msgType)) {
         // 收到了心跳回应，重置心跳计时器即可
         case msgType.heartbeat:

@@ -1,6 +1,5 @@
 <template>
   <div style="height: 100%;">
-    <!-- 消息显示区域 -->
     <el-row style="height: 65%; background: white;">
       <el-row style="height: 10%;" class="chat-banner">
         <el-col :span="2">
@@ -10,12 +9,14 @@
         </el-col>
         <el-col :span="10" :offset="5" style="height: 100%;">
           <div>
-            <p class="chat-banner-title overflow-text">{{ userInfo.displayName }}</p>
+            <p class="chat-banner-title overflow-text">{{ realUserInfo.displayName }}</p>
           </div>
         </el-col>
       </el-row>
-      <div class="msg-container" style="height: 90%; weight: 100%; overflow: auto;">
-        <markdown :source="msgDto.content"></markdown>
+      <!-- 消息显示区域 -->
+      <div class="msg-container">
+        <!-- <markdown :source="msgDto.content"></markdown> -->
+        <div class="dialog"></div>
       </div>
     </el-row>
     <div class="line"></div>
@@ -36,8 +37,7 @@ export default {
       avatar: "",
       userName: "",
       email: "",
-      uid: "",
-      state: ""
+      uid: ""
     }
   },
   data() {
@@ -48,6 +48,13 @@ export default {
         content: "",
         contentType: "",
         msgType: ""
+      },
+      realUserInfo: {
+        displayName: "",
+        avatar: "",
+        userName: "",
+        email: "",
+        uid: ""
       }
     };
   },
@@ -66,6 +73,17 @@ export default {
       });
       // 将这条消息刷到屏幕中，设置一个等待回应的图标，若回应成功，删掉取消回应的图标
       this.msgDto.content = "";
+    },
+    async getUser() {
+      const res = await this.$service.get("/auth_api/user").catch(() => {});
+      this.realUserInfo = res.data;
+    }
+  },
+  created() {
+    if (this.userInfo != null) {
+      this.realUserInfo = this.userInfo;
+    } else {
+      this.getUser();
     }
   }
 };
@@ -75,5 +93,19 @@ export default {
 .editor {
   max-height: 100% !important;
   min-height: 100% !important;
+}
+.dialog {
+  width: 70%;
+  height: auto;
+  min-height: 1.5rem;
+  background: black;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+.owner {
+}
+.other {
+}
+.msg-container {
 }
 </style>
