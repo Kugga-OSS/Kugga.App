@@ -35,13 +35,44 @@
 <script>
 // 基本上所有通信需要的全局状态都是保存在这个次根组件中
 import base64url from "base64url";
+const heartBeat = {
+  content: "heartbeat:ping",
+  msgType: "4"
+};
+const hbStr = JSON.stringify(heartBeat);
+const heartCheck = {
+  // 每20秒发送心跳
+  sendSpace: 20 * 1000,
+  // 服务端回应超时时间
+  timeout: 15 * 1000,
+  timer: null,
+  serverTimer: null,
+  reset() {
+    this.timer && clearTimeout(this.timer);
+    this.serverTimer && clearTimeout(this.serverTimer);
+  },
+  start(ws) {
+    console.log("开启心跳");
+    this.reset();
+    this.timer = setTimeout(() => {
+      // 发送心跳
+      ws.send(hbStr);
+      this.serverTimer = setTimeout(() => {
+        // 超过响应时间后端没有回应，说明连接已经断开了, 这个时候就断开连接
+        ws.close();
+      }, this.timeout);
+    }, this.sendSpace);
+  }
+};
+
 export default {
   data() {
     return {
       // websocket相关状态
       websocket: "",
       wspath: "ws://localhost:10086/ws",
-
+      lockReconnect: false, // 连接失败不重连
+      maxReconnectTimes: 5, // 最多重连五次
       // 侧边栏的最近联系人列表项
       eachItem: {
         displayName: "ayang818",
@@ -75,7 +106,7 @@ export default {
       // ONLINE = 1       上线请求
       // NEWMSG = 2       新消息
       // ACK = 3          对某条消息的ACK
-      // HEARTBEAT = 4    心跳反馈
+      // HEARTBEAT = 4    心跳
       msgDto.msgType = "2";
       this.send(JSON.stringify(msgDto));
     },
@@ -113,6 +144,7 @@ export default {
       this.ownerInfo = res.data;
       return res.data.uid;
     },
+    // ================  以下是Websocket相关方法  ================
     // 初始化websocket
     init() {
       if (typeof WebSocket === "undefined") {
@@ -131,17 +163,23 @@ export default {
     },
     open() {
       console.log("连接建立成功");
-      // 这步操作和stackoverflow上学了一手
+      // https://stackoverflow.com/questions/49938266/how-to-return-values-from-async-functions-using-async-await-from-function
       (async () => {
         var uid = await this.getUser();
+        // 注册网关机
         this.websocket.send(JSON.stringify({ senderUid: uid, msgType: "1" }));
       })();
+      // 开启心跳
+      heartCheck.start(this.websocket);
     },
     error() {
       console.log("连接错误");
+      this.reconnect();
     },
     getMessage(msg) {
-      alert(msg);
+      console.log(msg);
+      // 重置心跳
+      heartCheck.start(this.websocket);
     },
     // 发送消息
     send(msgDto) {
@@ -149,9 +187,16 @@ export default {
     },
     close() {
       console.log("连接已经关闭");
+      this.reconnect();
     },
-    generateMsg(msgDto) {
-      console.log(msgDto);
+    reconnect() {
+      console.log("尝试重新连接");
+      if (this.lockReconnect || this.maxReconnectTimes <= 0) {
+        return;
+      }
+      setTimeout(() => {
+        this.init();
+      }, 60 * 1000);
     }
   },
   created() {
