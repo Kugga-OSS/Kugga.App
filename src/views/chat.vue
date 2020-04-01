@@ -53,8 +53,8 @@ const friendReqStruct = {
 }
 const hbStr = JSON.stringify(heartBeat);
 const heartCheck = {
-  // 每20秒发送心跳
-  sendSpace: 20 * 1000,
+  // 每15秒发送一次心跳
+  sendSpace: 15 * 1000,
   // 服务端回应超时时间
   timeout: 15 * 1000,
   timer: null,
@@ -82,8 +82,7 @@ export default {
       // websocket相关状态
       websocket: "",
       wspath: "ws://localhost:10086/ws",
-      lockReconnect: false, // 连接失败不重连
-      maxReconnectTimes: 5, // 最多重连五次
+      maxReconnectTimes: 3, // 最多重连三次
       // 侧边栏的最近联系人列表项
       eachItem: {
         displayName: "ayang818",
@@ -207,7 +206,8 @@ export default {
       console.log(msgObj);
       switch (String(msgObj.msgType)) {
         // 收到了心跳回应，重置心跳计时器即可
-        case msgType.heartbeat:
+        case msgType.heartBeat:
+          console.log("receive pong");
           heartCheck.start(this.websocket);
           break;
         // 好友请求
@@ -234,7 +234,7 @@ export default {
       }
       setTimeout(() => {
         this.init();
-      }, 60 * 1000);
+      }, 60 * 10);
     }
   },
   created() {
