@@ -16,14 +16,7 @@
       <!-- 消息显示区域 -->
       <div class="msg-container">
         <!-- <markdown :source="msgDto.content"></markdown> -->
-        <div class="dialog float-right">
-          <div class="right-arrow"></div>
-          <markdown :source="content"></markdown>
-        </div>
-        <div class="dialog float-left">
-          <div class="left-arrow"></div>
-          <markdown>$\int_a^b f(x)dx$</markdown>
-        </div>
+        <div class="dialog"></div>
       </div>
     </el-row>
     <div class="line"></div>
@@ -62,8 +55,7 @@ export default {
         userName: "",
         email: "",
         uid: ""
-      },
-      content: "[Google](https://www.google.com)"
+      }
     };
   },
   methods: {
@@ -102,47 +94,18 @@ export default {
   max-height: 100% !important;
   min-height: 100% !important;
 }
-.msg-container {
-}
 .dialog {
-  width: 50%;
+  width: 70%;
   height: auto;
-  min-height: 2rem;
-  border: 1.5px solid #000;
-  border-radius: 10px;
-  position: relative;
-  margin-top: 10px;
+  min-height: 1.5rem;
+  background: black;
+  border: 1px solid black;
+  border-radius: 5px;
 }
-.float-left {
-  float: left;
-  margin-left: 40px;
+.owner {
 }
-.float-right {
-  float: right;
-  margin-right:  40px;
+.other {
 }
-.right-arrow {
-  content: "";
-  display: block;
-  position: absolute;
-  width: 0;
-  height: 0;
-  top: 5%;
-  left: 100%;
-  border-left: 12px solid #000;
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;
-}
-.left-arrow {
-  content: "";
-  display: block;
-  position: absolute;
-  width: 0;
-  height: 0;
-  top: 5%;
-  left: -12px;
-  border-right: 12px solid #000;
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;
+.msg-container {
 }
 </style>
