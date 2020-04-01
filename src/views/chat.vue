@@ -39,48 +39,19 @@
 <script>
 // 基本上所有通信需要的全局状态都是保存在这个次根组件中
 import base64url from "base64url";
-const msgType = {
-  heartbeat: "4",
-  friendRequest: "5"
-};
-const heartBeat = {
-  content: "heartbeat:ping",
-  msgType: msgType.heartBeat
-};
-const friendReqStruct = {
-  content: null,
-  msgType: msgType.friendRequest,
-}
-const hbStr = JSON.stringify(heartBeat);
-const heartCheck = {
-  // 每15秒发送一次心跳
-  sendSpace: 15 * 1000,
-  // 服务端回应超时时间
-  timeout: 15 * 1000,
-  timer: null,
-  serverTimer: null,
-  reset() {
-    this.timer && clearTimeout(this.timer);
-    this.serverTimer && clearTimeout(this.serverTimer);
-  },
-  start(ws) {
-    this.reset();
-    this.timer = setTimeout(() => {
-      // 发送心跳
-      ws.send(hbStr);
-      this.serverTimer = setTimeout(() => {
-        // 超过响应时间后端没有回应，说明连接已经断开了, 这个时候就断开连接
-        ws.close();
-      }, this.timeout);
-    }, this.sendSpace);
-  }
-};
+import {
+  msgType,
+  heartBeat,
+  friendReqStruct,
+  hbStr,
+  heartCheck
+} from "../static/js/wsstatus";
 
 export default {
   data() {
     return {
       // websocket相关状态
-      websocket: "",
+      websocket: null,
       wspath: "ws://localhost:10086/ws",
       maxReconnectTimes: 3, // 最多重连三次
       // 侧边栏的最近联系人列表项
@@ -103,7 +74,7 @@ export default {
         email: "",
         avatar: "",
         displayName: ""
-      },
+      }
     };
   },
   methods: {
@@ -166,7 +137,7 @@ export default {
         duration: 0,
         title: "好友申请",
         type: "info"
-      })
+      });
     },
     // ================  以下是Websocket相关方法  ================
     // 初始化websocket
@@ -174,18 +145,21 @@ export default {
       if (typeof WebSocket === "undefined") {
         alert("您的浏览器不支持我们的站点，请选择Chrome或Firefox浏览器！");
       } else {
+        if (this.websocket !== null) {
+          console.log("hello world");
+        }
         // 实例化socket
         this.websocket = new WebSocket(this.wspath);
         // 监听socket连接
-        this.websocket.onopen = this.open;
+        this.websocket.onopen = this.onopen;
         // 监听socket错误信息
-        this.websocket.onerror = this.error;
+        this.websocket.onerror = this.onerror;
         // 监听socket消息
-        this.websocket.onmessage = this.getMessage;
-        this.websocket.onclose = this.close;
+        this.websocket.onmessage = this.onmessage;
+        this.websocket.onclose = this.onclose;
       }
     },
-    open() {
+    onopen() {
       console.log("连接建立成功");
       // https://stackoverflow.com/questions/49938266/how-to-return-values-from-async-functions-using-async-await-from-function
       (async () => {
@@ -196,11 +170,11 @@ export default {
       // 开启心跳
       heartCheck.start(this.websocket);
     },
-    error() {
+    onerror() {
       console.log("连接错误");
       this.reconnect();
     },
-    getMessage(msg) {
+    onmessage(msg) {
       const data = msg.data;
       const msgObj = JSON.parse(data);
       console.log(msgObj);
@@ -223,8 +197,8 @@ export default {
     send(msgDto) {
       this.websocket.send(msgDto);
     },
-    close() {
-      console.log("连接已经关闭");
+    onclose() {
+      console.log("连接已关闭");
       this.reconnect();
     },
     reconnect() {
@@ -238,9 +212,11 @@ export default {
     }
   },
   created() {
+    console.log("create page`");
     this.init();
   },
   destroyed() {
+    console.log("closed web socket");
     this.websocket.close();
   }
 };
