@@ -40,7 +40,7 @@
 // 基本上所有通信需要的全局状态都是保存在这个次根组件中
 import base64url from "base64url";
 const msgType = {
-  heartBeat: "4",
+  heartbeat: "4",
   friendRequest: "5"
 };
 const heartBeat = {
@@ -82,6 +82,7 @@ export default {
       // websocket相关状态
       websocket: "",
       wspath: "ws://localhost:10086/ws",
+      lockReconnect: false, // 连接失败不重连
       maxReconnectTimes: 5, // 最多重连五次
       // 侧边栏的最近联系人列表项
       eachItem: {
@@ -193,7 +194,6 @@ export default {
         // 注册网关机
         this.websocket.send(JSON.stringify({ senderUid: uid, msgType: "1" }));
       })();
-      this.maxReconnectTimes = 5;
       // 开启心跳
       heartCheck.start(this.websocket);
     },
@@ -229,10 +229,9 @@ export default {
     },
     reconnect() {
       console.log("尝试重新连接");
-      if (this.maxReconnectTimes < 0) {
+      if (this.lockReconnect || this.maxReconnectTimes <= 0) {
         return;
       }
-      this.maxReconnectTimes--;
       setTimeout(() => {
         this.init();
       }, 60 * 1000);
