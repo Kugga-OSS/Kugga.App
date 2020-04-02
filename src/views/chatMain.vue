@@ -10,7 +10,7 @@
         </el-col>
         <el-col :span="10" :offset="5" style="height: 100%;">
           <div>
-            <p class="chat-banner-title overflow-text">{{ userInfo.displayName }}</p>
+            <p class="chat-banner-title overflow-text">{{ realUserInfo.displayName }}</p>
           </div>
         </el-col>
       </el-row>
@@ -29,16 +29,12 @@
 </template>
 
 <script>
+import base64url from "base64url";
+
 export default {
   props: {
-    userInfo: {
-      displayName: "",
-      avatar: "",
-      userName: "",
-      email: "",
-      uid: "",
-      state: ""
-    }
+    userInfo: {},
+    newMsg: {}
   },
   data() {
     return {
@@ -48,7 +44,9 @@ export default {
         content: "",
         contentType: "",
         msgType: ""
-      }
+      },
+      realUserInfo: {},
+      msgList: []
     };
   },
   methods: {
@@ -66,6 +64,32 @@ export default {
       });
       // 将这条消息刷到屏幕中，设置一个等待回应的图标，若回应成功，删掉取消回应的图标
       this.msgDto.content = "";
+    },
+    async getUser(un) {
+      const res = await this.$service.get("/auth_api/user", {username : un}).catch(() => {});
+      this.realUserInfo = res.data;
+    },
+  },
+  watch: {
+    newMsg: {
+      immediate: true,
+      handler(val) {
+        if (this.newMsg === null || this.newMsg === undefined) {
+          return;
+        }
+        console.log("val is" + JSON.stringify(val));
+        console.log(JSON.stringify(this.newMsg) +" from children compom");
+      }
+    }
+  },
+  created() {
+    // 本来otherInfo依赖于父组件传入的值，但是要是刷新之后，就会产生意外白屏的错误，所以在这里做一层判断
+    if (this.userInfo === undefined || this.userInfo === null) {
+        const encodedUsername = this.$route.params.id;
+        const username = base64url.decode(encodedUsername);
+        this.getUser(username);
+    } else {
+      this.realUserInfo = this.userInfo;
     }
   }
 };

@@ -1,4 +1,5 @@
 export const msgType = {
+    newMsg: "2",
     heartBeat: "4",
     friendRequest: "5"
 };
@@ -34,3 +35,10 @@ export const heartCheck = {
         }, this.sendSpace);
     }
 };
+
+/**
+ * 子组件里有一个列表，列表中的数据是子组件自己获取的。现在父组件获得了一个新的项，如何把这个新的项从父组件更新到子组件的列表中
+ */
+export function syncMsg(params) {
+    
+}

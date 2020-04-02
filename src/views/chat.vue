@@ -44,7 +44,8 @@ import {
   heartBeat,
   friendReqStruct,
   hbStr,
-  heartCheck
+  heartCheck,
+  syncMsg
 } from "../static/js/wsstatus";
 
 export default {
@@ -54,6 +55,7 @@ export default {
       websocket: null,
       wspath: "ws://localhost:10086/ws",
       maxReconnectTimes: 3, // 最多重连三次
+      newMsg: {}, 
       // 侧边栏的最近联系人列表项
       eachItem: {
         displayName: "ayang818",
@@ -105,7 +107,8 @@ export default {
         name: "chatMain",
         params: {
           userInfo: item,
-          id: base64url.encode("username:" + String(item.userName))
+          id: base64url.encode(String(item.userName)),
+          newMsg: this.newMsg
         }
       });
     },
@@ -115,7 +118,8 @@ export default {
         name: "chatMain",
         params: {
           userInfo: item,
-          id: base64url.encode("username:" + String(item.userName))
+          id: base64url.encode(String(item.userName)),
+          newMsg: this.newMsg
         }
       });
     },
@@ -156,6 +160,7 @@ export default {
         this.websocket.onerror = this.onerror;
         // 监听socket消息
         this.websocket.onmessage = this.onmessage;
+        // 监听socket关闭
         this.websocket.onclose = this.onclose;
       }
     },
@@ -177,8 +182,13 @@ export default {
     onmessage(msg) {
       const data = msg.data;
       const msgObj = JSON.parse(data);
-      console.log(msgObj);
       switch (String(msgObj.msgType)) {
+        /* 收到消息后，需要找到这条消息的receiver所在的对话框，然后然后把这条消息推到对话框所在组建的消息列表中显示*/
+        case msgType.newMsg:
+          // alert(JSON.stringify(msgObj));
+          console.log(msgObj);
+          this.newMsg = msgObj;
+          break;
         // 收到了心跳回应，重置心跳计时器即可
         case msgType.heartBeat:
           console.log("receive pong");
@@ -212,7 +222,6 @@ export default {
     }
   },
   created() {
-    console.log("create page`");
     this.init();
   },
   destroyed() {
