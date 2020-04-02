@@ -14,10 +14,22 @@
           </div>
         </el-col>
       </el-row>
-      <div class="msg-container" style="height: 90%; weight: 100%; overflow: auto;">
-        <div class="dialog float-left" v-for="(item,index) in msgList" v-bind:key="index">
-          <div class="left-arrow"></div>
-          <markdown>{{ item.content }}</markdown>
+      <div class="msg-container">
+        <!-- 消息发送者不是自己就在左边，是自己就在右边 -->
+        <div v-for="(item,index) in msgList" v-bind:key="index" class="chat-parent">
+          <img
+            :src="String(item.senderUid) === String(realOwnerUserInfo.uid) ? realOwnerUserInfo.avatar : realUserInfo.avatar"
+            alt
+            :class="String(item.senderUid) === String(realOwnerUserInfo.uid) ? 'chat-avatar right' : 'chat-avatar left'"
+          />
+          <div
+            :class="String(item.senderUid) === String(realOwnerUserInfo.uid) ? 'dialog float-right' : 'dialog float-left'"
+          >
+            <div
+              :class="String(item.senderUid) === String(realOwnerUserInfo.uid) ? 'right-arrow' : 'left-arrow'"
+            ></div>
+            <markdown>{{ item.content }}</markdown>
+          </div>
         </div>
       </div>
     </el-row>
@@ -97,7 +109,7 @@ export default {
     },
     addNewMsg2List(msg) {
       if (msg === null || msg === undefined) return;
-      this.msgList.push(msg);
+      this.msgList.push(JSON.parse(JSON.stringify(msg)));
       console.log(this.msgList);
     }
   },
@@ -151,6 +163,9 @@ export default {
 }
 
 .msg-container {
+  height: 90%;  
+  overflow: auto;
+  width: 100%;
 }
 .dialog {
   width: 50%;
@@ -164,6 +179,7 @@ export default {
 .float-left {
   float: left;
   margin-left: 40px;
+  display: inline;
 }
 .float-right {
   float: right;
@@ -192,5 +208,24 @@ export default {
   border-right: 12px solid #000;
   border-top: 9px solid transparent;
   border-bottom: 9px solid transparent;
+}
+.chat-avatar {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #f1f1f1;
+  margin-top: 10px;
+  border-radius: 100px;
+}
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
+.chat-parent {
+  min-height: 50px;
+  height: 50px;
+  width: 90%;
+  margin: 0 5%;
 }
 </style>
