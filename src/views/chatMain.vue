@@ -15,15 +15,10 @@
         </el-col>
       </el-row>
       <div class="msg-container" style="height: 90%; weight: 100%; overflow: auto;">
-        <div class="dialog float-right">
-          <div class="right-arrow"></div>
-          <markdown :source="content"></markdown>
-        </div>
-        <div class="dialog float-left">
+        <div class="dialog float-left" v-for="(item,index) in msgList" v-bind:key="index">
           <div class="left-arrow"></div>
-          <markdown>$\int_a^b f(x)dx$</markdown>
+          <markdown>{{ item.content }}</markdown>
         </div>
-        {{ newMsg }}
       </div>
     </el-row>
     <div class="line"></div>
@@ -42,7 +37,18 @@ import base64url from "base64url";
 export default {
   props: {
     userInfo: {},
-    newMsg: {}
+    newMsg: {
+      // mid: Number,
+      // content: String,
+      // senderUid: Number,
+      // receiverUid: Number,
+      // type: Number,
+      // msgType: Number,
+      // createTime: String,
+      // senderName: String,
+      // receiverName: String
+    },
+    ownerUserInfo: {}
   },
   data() {
     return {
@@ -53,9 +59,11 @@ export default {
         contentType: "",
         msgType: ""
       },
+      // 对方的用户信息
       realUserInfo: {},
-      msgList: [],
-      content: "[Google](https://www.google.com)"
+      // 自己的用户信息
+      realOwnerUserInfo: {},
+      msgList: []
     };
   },
   methods: {
@@ -63,6 +71,13 @@ export default {
       this.$router.push({ name: "defaultView" });
     },
     send() {
+      if (
+        this.msgDto.content === null ||
+        this.msgDto.content === "" ||
+        this.msgDto.content === undefined
+      ) {
+        return;
+      }
       this.$emit("send-msg", {
         senderUid: "",
         receiverUid: this.realUserInfo.uid,
@@ -75,33 +90,57 @@ export default {
       this.msgDto.content = "";
     },
     async getUser(un) {
-      const res = await this.$service.get("/auth_api/user", {username : un}).catch(() => {});
+      const res = await this.$service
+        .get("/auth_api/user", { username: un })
+        .catch(() => {});
       this.realUserInfo = res.data;
     },
+    addNewMsg2List(msg) {
+      if (msg === null || msg === undefined) return;
+      this.msgList.push(msg);
+      console.log(this.msgList);
+    }
   },
   watch: {
     newMsg: {
       immediate: true,
       deep: true,
       handler(oldVal, newVal) {
-        // if (this.newMsg === null || this.newMsg === undefined) {
-        //   return;
-        // }
+        if (
+          this.newMsg === null ||
+          this.newMsg === undefined ||
+          Object.keys(this.newMsg).length === 0
+        ) {
+          return;
+        }
         console.log("chatMain component");
-        console.log(JSON.stringify(this.newMsg) +" from children compom");
+        console.log(newVal);
+        this.addNewMsg2List(newVal);
       }
     }
   },
-  created() {
-    // 本来otherInfo依赖于父组件传入的值，但是要是刷新之后，就会产生意外白屏的错误，所以在这里做一层判断
+  mounted() {
+    // 本来otherInfo和ownerUserInfo依赖于父组件传入的值，但是要是刷新之后，就会产生意外白屏的错误，所以在这里做一层判断
+    console.log("hello world");
     if (this.userInfo === undefined || this.userInfo === null) {
-        const encodedUsername = this.$route.params.id;
-        const username = base64url.decode(encodedUsername);
-        this.getUser(username);
+      const encodedUsername = this.$route.params.id;
+      const username = base64url.decode(encodedUsername);
+      this.getUser(username);
     } else {
       this.realUserInfo = this.userInfo;
     }
-  }
+    if (this.ownerUserInfo === undefined || this.ownerUserInfo === null) {
+      (async () => {
+        const userInfo = await this.$service
+          .get("/auth_api/user")
+          .catch(() => {});
+        this.realOwnerUserInfo = userInfo.data;
+      })();
+    } else {
+      this.realOwnerUserInfo = this.ownerUserInfo;
+    }
+  },
+  created() {}
 };
 </script>
 
@@ -128,7 +167,7 @@ export default {
 }
 .float-right {
   float: right;
-  margin-right:  40px;
+  margin-right: 40px;
 }
 .right-arrow {
   content: "";

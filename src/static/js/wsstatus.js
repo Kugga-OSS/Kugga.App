@@ -14,7 +14,7 @@ export const friendReqStruct = {
 export const hbStr = JSON.stringify(heartBeat);
 export const heartCheck = {
     // 每15秒发送一次心跳
-    sendSpace: 15 * 1000,
+    sendSpace: 20 * 1000,
     // 服务端回应超时时间
     timeout: 30 * 1000,
     timer: null,

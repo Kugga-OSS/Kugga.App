@@ -54,6 +54,11 @@ const router = new VueRouter({
   routes
 })
 
+const routerPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error=> error)
+}
+
 router.beforeEach((to, from, next) => {
   if (!to.meta.isPublic && !localStorage.token) {
     return next("/login");

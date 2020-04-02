@@ -48,7 +48,6 @@ import {
   syncMsg
 } from "../static/js/wsstatus";
 
-
 export default {
   data() {
     return {
@@ -56,7 +55,7 @@ export default {
       websocket: null,
       wspath: "ws://localhost:10086/ws",
       maxReconnectTimes: 3, // 最多重连三次
-      newMsg: {}, 
+      newMsg: {},
 
       // 侧边栏的最近联系人列表项
       eachItem: {
@@ -105,25 +104,35 @@ export default {
         }
       }
       !isContain && this.recentChatList.push(item);
-      this.$router.push({
-        name: "chatMain",
-        params: {
-          userInfo: item,
-          id: base64url.encode(String(item.userName)),
-          newMsg: this.newMsg
-        }
-      });
+      try {
+        this.$router.push({
+          name: "chatMain",
+          params: {
+            userInfo: item,
+            id: base64url.encode(String(item.userName)),
+            newMsg: this.newMsg,
+            ownerUserInfo: this.ownerInfo
+          }
+        });
+      } catch {
+        console.log();
+      }
     },
     // 进入和某个好友的聊天界面
     chatWith(item) {
-      this.$router.push({
-        name: "chatMain",
-        params: {
-          userInfo: item,
-          id: base64url.encode(String(item.userName)),
-          newMsg: this.newMsg
-        }
-      });
+      try {
+        this.$router.push({
+          name: "chatMain",
+          params: {
+            userInfo: item,
+            id: base64url.encode(String(item.userName)),
+            newMsg: this.newMsg,
+            ownerUserInfo: this.ownerInfo
+          }
+        });
+      } catch {
+        console.log();
+      }
     },
     // 获取自己的信息
     async getUser() {
@@ -190,7 +199,6 @@ export default {
           break;
         // 收到了心跳回应，重置心跳计时器即可
         case msgType.heartBeat:
-          console.log("receive pong");
           heartCheck.start(this.websocket);
           break;
         // 好友请求
