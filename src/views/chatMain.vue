@@ -15,7 +15,15 @@
         </el-col>
       </el-row>
       <div class="msg-container" style="height: 90%; weight: 100%; overflow: auto;">
-        <markdown :source="msgDto.content"></markdown>
+        <div class="dialog float-right">
+          <div class="right-arrow"></div>
+          <markdown :source="content"></markdown>
+        </div>
+        <div class="dialog float-left">
+          <div class="left-arrow"></div>
+          <markdown>$\int_a^b f(x)dx$</markdown>
+        </div>
+        {{ newMsg }}
       </div>
     </el-row>
     <div class="line"></div>
@@ -46,7 +54,8 @@ export default {
         msgType: ""
       },
       realUserInfo: {},
-      msgList: []
+      msgList: [],
+      content: "[Google](https://www.google.com)"
     };
   },
   methods: {
@@ -56,7 +65,7 @@ export default {
     send() {
       this.$emit("send-msg", {
         senderUid: "",
-        receiverUid: this.userInfo.uid,
+        receiverUid: this.realUserInfo.uid,
         content: this.msgDto.content,
         contentType: "",
         msgType: "",
@@ -73,11 +82,12 @@ export default {
   watch: {
     newMsg: {
       immediate: true,
-      handler(val) {
-        if (this.newMsg === null || this.newMsg === undefined) {
-          return;
-        }
-        console.log("val is" + JSON.stringify(val));
+      deep: true,
+      handler(oldVal, newVal) {
+        // if (this.newMsg === null || this.newMsg === undefined) {
+        //   return;
+        // }
+        console.log("chatMain component");
         console.log(JSON.stringify(this.newMsg) +" from children compom");
       }
     }
@@ -99,5 +109,49 @@ export default {
 .editor {
   max-height: 100% !important;
   min-height: 100% !important;
+}
+
+.msg-container {
+}
+.dialog {
+  width: 50%;
+  height: auto;
+  min-height: 2rem;
+  border: 1.5px solid #000;
+  border-radius: 10px;
+  position: relative;
+  margin-top: 10px;
+}
+.float-left {
+  float: left;
+  margin-left: 40px;
+}
+.float-right {
+  float: right;
+  margin-right:  40px;
+}
+.right-arrow {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 5%;
+  left: 100%;
+  border-left: 12px solid #000;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+}
+.left-arrow {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 5%;
+  left: -12px;
+  border-right: 12px solid #000;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
 }
 </style>

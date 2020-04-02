@@ -48,6 +48,7 @@ import {
   syncMsg
 } from "../static/js/wsstatus";
 
+
 export default {
   data() {
     return {
@@ -56,6 +57,7 @@ export default {
       wspath: "ws://localhost:10086/ws",
       maxReconnectTimes: 3, // 最多重连三次
       newMsg: {}, 
+
       // 侧边栏的最近联系人列表项
       eachItem: {
         displayName: "ayang818",
@@ -149,9 +151,6 @@ export default {
       if (typeof WebSocket === "undefined") {
         alert("您的浏览器不支持我们的站点，请选择Chrome或Firefox浏览器！");
       } else {
-        if (this.websocket !== null) {
-          console.log("hello world");
-        }
         // 实例化socket
         this.websocket = new WebSocket(this.wspath);
         // 监听socket连接
@@ -185,9 +184,9 @@ export default {
       switch (String(msgObj.msgType)) {
         /* 收到消息后，需要找到这条消息的receiver所在的对话框，然后然后把这条消息推到对话框所在组建的消息列表中显示*/
         case msgType.newMsg:
-          // alert(JSON.stringify(msgObj));
-          console.log(msgObj);
-          this.newMsg = msgObj;
+          for (var item in msgObj) {
+            this.$set(this.newMsg, item, msgObj[item]);
+          }
           break;
         // 收到了心跳回应，重置心跳计时器即可
         case msgType.heartBeat:
