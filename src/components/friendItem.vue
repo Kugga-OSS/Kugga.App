@@ -1,9 +1,15 @@
 <template>
-  <div class="friend-flex">
-    <div style="display: flex; justify-content: flex-start; align-items: center;">
+  <div :class="type !== 'recentChatList' ?  'friend-flex' : 'recent-list'">
+    <div class="recent-flex">
+      <!-- 头像 -->
       <div style="width: 40%;">
         <img :src="avatar" class="friend-avatar" />
       </div>
+      <!-- 其他消息 -->
+      <div style="margin-left: 5px; width: 40%;" v-if="type == 'recentChatList'">
+        <div class="overflow-text" style="float:left;">{{displayName}}</div>
+      </div>
+
       <div
         style="margin-left: 5px; width: 80%;"
         class="overflow-text"
@@ -11,6 +17,10 @@
       >
         <div>用户名 : {{username}}</div>
         <div>昵称 : {{displayName}}</div>
+      </div>
+
+      <div class="pointer" v-if="type == 'recentChatList'" style="width: 20%;">
+        <el-button @click="removeItem" type="info" icon="el-icon-close" class="close-btn" size="small" circle></el-button>
       </div>
     </div>
 
@@ -110,6 +120,11 @@ export default {
           message: res.data.message
         });
       }
+    },
+    removeItem(event) {
+      this.$emit("remove-item", this.username);
+      if (event && event.stopPropagation) event.stopPropagation();
+      else window.event.cancelBubble = true;
     }
   }
 };
@@ -121,6 +136,27 @@ export default {
   justify-content: space-around;
   align-items: center;
 }
+.recent-list:hover .pointer>.close-btn {
+  background: #f0f0f0;
+  box-shadow: 2px 2px #888888;
+  transition: all 0.3s;
+  background: #f0f0f0;
+  color: black;
+}
+
+.close-btn {
+  /* color: black; */
+  background: white;
+  color: white;
+  border: none;
+}
+
+.recent-flex {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .friend-flex:hover {
   background: #f0f0f0;
   box-shadow: 2px 2px #888888;

@@ -10,6 +10,7 @@
           <div v-for="(item, index) in recentChatList" v-bind:key="index" @click="chatWith(item)">
             <friend-item
               v-on:when-update="reload"
+              v-on:remove-item="removeItem"
               :displayName="item.displayName"
               :avatar="item.avatar"
               :username="item.userName"
@@ -30,6 +31,7 @@
           v-on:push-item="addItem"
           v-on:send-msg="sendMsg"
           v-on:send-new-request="pushNewFriendRequest"
+          :key="$route.fullPath"
         ></router-view>
       </el-col>
     </el-row>
@@ -117,6 +119,29 @@ export default {
       } catch {
         console.log();
       }
+    },
+    removeItem(username) {
+      for (var entry of this.recentChatList) {
+        if (username === entry.userName) {
+          this.recentChatList.pop(entry);
+          break;
+        }
+      }
+      if (this.recentChatList.length === 0) {
+        this.$router.push({
+          name: "defaultView"
+        });
+      }
+      var item = this.recentChatList[0]
+      this.$router.push({
+          name: "chatMain",
+          params: {
+            userInfo: item,
+            id: base64url.encode(String(item.userName)),
+            newMsg: this.newMsg,
+            ownerUserInfo: this.ownerInfo
+          }
+        });
     },
     // 进入和某个好友的聊天界面
     chatWith(item) {
