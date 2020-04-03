@@ -106,7 +106,7 @@ export default {
         }
       }
       !isContain && this.recentChatList.push(item);
-      console.log(this.recentChatList);
+      // console.log(this.recentChatList);
       try {
         this.$router.push({
           name: "chatMain",

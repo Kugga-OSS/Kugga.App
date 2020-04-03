@@ -123,12 +123,11 @@ export default {
     },
     async fetchMsg() {
       const res = await this.$service.get("/auth_api/msg", {otherUid: this.realUserInfo.uid}).catch(() => {});
-      this.msgList = res.data.msgList;
+      this.msgList = res && res.data && res.data.msgList ? res.data.msgList : [];
     },
     addNewMsg2List(msg) {
       if (msg === null || msg === undefined) return;
       this.msgList.push(JSON.parse(JSON.stringify(msg)));
-      console.log(this.msgList);
     }
   },
   updated() {

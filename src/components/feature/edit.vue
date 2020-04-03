@@ -241,7 +241,6 @@ export default {
         this.userInfo.avatar = res.data.url;
     },
     beforeUpload(file) {
-      console.log(file.type);
         if (file.type != "image/png" && file.type != "image/jpg" && file.type != "image/jpeg") {
             this.$message.error("请上传图片文件！");
             return false;
