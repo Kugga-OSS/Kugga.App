@@ -14,14 +14,21 @@
           </div>
         </el-col>
       </el-row>
-      <div class="msg-container">
-        <!-- 消息发送者不是自己就在左边，是自己就在右边 -->
-        <div v-for="(item,index) in msgList" v-bind:key="index" :class="String(item.senderUid) === String(realOwnerUserInfo.uid) ? 'chat-parent right' : 'chat-parent left'">
-          <img v-if="String(item.senderUid) !== String(realOwnerUserInfo.uid)" :src="realUserInfo.avatar" alt="" class="chat-avatar">
+      <div class="msg-container" id="msgContainer">
+        <!-- 消息发送者不是自己就在左边显示，不是自己就在右边显示 -->
+        <div
+          v-for="(item,index) in msgList"
+          v-bind:key="index"
+          :class="String(item.senderUid) === String(realOwnerUserInfo.uid) ? 'chat-parent right' : 'chat-parent left'"
+        >
+          <img
+            v-if="String(item.senderUid) !== String(realOwnerUserInfo.uid)"
+            :src="realUserInfo.avatar"
+            alt
+            class="chat-avatar"
+          />
           <!-- 消息内容框区域 -->
-          <div
-            class="dialog"
-          >
+          <div class="dialog">
             <div
               :class="String(item.senderUid) === String(realOwnerUserInfo.uid) ? 'arrow arrow-right' : 'arrow arrow-left'"
             ></div>
@@ -31,7 +38,12 @@
           </div>
           <!-- ------------- -->
           <!-- 头像区域 -->
-          <img v-if="String(item.senderUid) === String(realOwnerUserInfo.uid)" :src="realOwnerUserInfo.avatar" alt="" class="chat-avatar">
+          <img
+            v-if="String(item.senderUid) === String(realOwnerUserInfo.uid)"
+            :src="realOwnerUserInfo.avatar"
+            alt
+            class="chat-avatar"
+          />
         </div>
       </div>
     </el-row>
@@ -109,11 +121,46 @@ export default {
         .catch(() => {});
       this.realUserInfo = res.data;
     },
+    async fetchMsg() {
+      const res = await this.$service.get("/auth_api/msg", {otherUid: this.realUserInfo.uid}).catch(() => {});
+      this.msgList = res.data.msgList;
+    },
     addNewMsg2List(msg) {
       if (msg === null || msg === undefined) return;
       this.msgList.push(JSON.parse(JSON.stringify(msg)));
       console.log(this.msgList);
     }
+  },
+  updated() {
+    var element = document.getElementById("msgContainer");
+    element.scrollTop = element.scrollHeight;
+  },
+  mounted() {
+    // 本来otherInfo和ownerUserInfo依赖于父组件传入的值，但是要是刷新之后，就会产生意外白屏的错误，所以在这里做一层判断
+    if (!this.userInfo) {
+      const encodedUsername = this.$route.params.id;
+      const username = base64url.decode(encodedUsername);
+      // 拉取对方的信息
+      this.getUser(username);
+    } else {
+      this.realUserInfo = this.userInfo;
+    }
+    if (!this.ownerUserInfo) {
+      (async () => {
+        const userInfo = await this.$service
+          .get("/auth_api/user")
+          .catch(() => {});
+        this.realOwnerUserInfo = userInfo.data;
+        this.fetchMsg();
+      })();
+    } else {
+      this.realOwnerUserInfo = this.ownerUserInfo;
+    // 拉取历史记录
+      this.fetchMsg();
+    }
+  },
+  created() {
+
   },
   watch: {
     newMsg: {
@@ -127,34 +174,10 @@ export default {
         ) {
           return;
         }
-        console.log("chatMain component");
-        console.log(newVal);
         this.addNewMsg2List(newVal);
       }
     }
-  },
-  mounted() {
-    // 本来otherInfo和ownerUserInfo依赖于父组件传入的值，但是要是刷新之后，就会产生意外白屏的错误，所以在这里做一层判断
-    console.log("hello world");
-    if (this.userInfo === undefined || this.userInfo === null) {
-      const encodedUsername = this.$route.params.id;
-      const username = base64url.decode(encodedUsername);
-      this.getUser(username);
-    } else {
-      this.realUserInfo = this.userInfo;
-    }
-    if (this.ownerUserInfo === undefined || this.ownerUserInfo === null) {
-      (async () => {
-        const userInfo = await this.$service
-          .get("/auth_api/user")
-          .catch(() => {});
-        this.realOwnerUserInfo = userInfo.data;
-      })();
-    } else {
-      this.realOwnerUserInfo = this.ownerUserInfo;
-    }
-  },
-  created() {}
+  }
 };
 </script>
 
@@ -172,13 +195,14 @@ export default {
 .dialog {
   min-width: 40%;
   width: auto;
-  max-width: 80%;;
+  max-width: 80%;
   height: auto;
   min-height: 2rem;
   border: 1.5px solid #000;
-  border-radius: 10px;
+  border-radius: 8px;
   position: relative;
   margin-top: 10px;
+  margin-bottom: 5px;;
 }
 .arrow {
   content: "";
@@ -186,17 +210,17 @@ export default {
   position: absolute;
   width: 0;
   height: 0;
-  top: 5%;
+  top: 5px;
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
 }
 .arrow-left {
-border-right: 10px solid #000;
-left: -12px;
+  border-right: 10px solid #000;
+  left: -12px;
 }
 .arrow-right {
-border-left: 10px solid #000;
-left: 100%;
+  border-left: 10px solid #000;
+  left: 100%;
 }
 .chat-avatar {
   width: 40px;
@@ -211,7 +235,7 @@ left: 100%;
   min-height: 50px;
   height: auto;
   width: 65%;
-  margin: 0 5%;
+  margin: 0 2%;
   display: flex;
   align-items: flex-start;
 }

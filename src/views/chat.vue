@@ -106,6 +106,7 @@ export default {
         }
       }
       !isContain && this.recentChatList.push(item);
+      console.log(this.recentChatList);
       try {
         this.$router.push({
           name: "chatMain",
@@ -164,6 +165,10 @@ export default {
       const res = await this.$service.get("/auth_api/user").catch(() => {});
       this.ownerInfo = res.data;
       return res.data.uid;
+    },
+    async pullRecentChatList() {
+      const res = await this.$service.get("/auth_api/user/recentChat").catch(() => {});
+      this.recentChatList = res.data.friendList;
     },
     // 推送好友请求提示
     pushNewFriendRequest(uid) {
@@ -255,6 +260,7 @@ export default {
   },
   created() {
     this.init();
+    this.pullRecentChatList();
   },
   destroyed() {
     console.log("closed web socket");
