@@ -14,6 +14,7 @@
           ref="form"
           :model="form"
           :rules="rules"
+          @validate="checkForm"
           label-width="0"
           style="height: 100%; padding: 20px 20px; font-size: 1.2rem"
           status-icon
@@ -36,7 +37,7 @@
           <el-form-item>
             <el-row :gutter="20">
               <el-col :span="4" :offset="8">
-                <el-button type="success" @click="register" round>注册</el-button>
+                <el-button type="success" @click="register" :disabled="disableSubmitPass" round>注册</el-button>
               </el-col>
             </el-row>
           </el-form-item>
@@ -134,7 +135,15 @@ export default {
         checkPassword: [{ validator: reCheckPass, trigger: "blur" }],
         displayName: [{ validator: checkDisplayName, trigger: "blur" }],
         email: [{ validator: checkEmail, trigger: "blur" }]
-      }
+      },
+      check: {
+        username: false,
+        password: false,
+        checkPassword: false,
+        displayName: false,
+        email: false
+      },
+      disableSubmitPass: true
     };
   },
   methods: {
@@ -158,6 +167,16 @@ export default {
     },
     backToLoginWithUsername(userName) {
         this.$router.push({name : "login", params: {username : userName}});
+    },
+    checkForm(prop, isSuccess, msg) {
+      this.check[prop] = isSuccess;
+      for (var item in this.check) {
+        if (this.check[item] === false) {
+          this.disableSubmitPass = true;
+          return;
+        }
+      }
+      this.disableSubmitPass = false;
     }
   }
 };
