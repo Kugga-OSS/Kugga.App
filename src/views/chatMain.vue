@@ -16,20 +16,22 @@
       </el-row>
       <div class="msg-container">
         <!-- 消息发送者不是自己就在左边，是自己就在右边 -->
-        <div v-for="(item,index) in msgList" v-bind:key="index" class="chat-parent">
-          <img
-            :src="String(item.senderUid) === String(realOwnerUserInfo.uid) ? realOwnerUserInfo.avatar : realUserInfo.avatar"
-            alt
-            :class="String(item.senderUid) === String(realOwnerUserInfo.uid) ? 'chat-avatar right' : 'chat-avatar left'"
-          />
+        <div v-for="(item,index) in msgList" v-bind:key="index" :class="String(item.senderUid) === String(realOwnerUserInfo.uid) ? 'chat-parent right' : 'chat-parent left'">
+          <img v-if="String(item.senderUid) !== String(realOwnerUserInfo.uid)" :src="realUserInfo.avatar" alt="" class="chat-avatar">
+          <!-- 消息内容框区域 -->
           <div
-            :class="String(item.senderUid) === String(realOwnerUserInfo.uid) ? 'dialog float-right' : 'dialog float-left'"
+            class="dialog"
           >
             <div
-              :class="String(item.senderUid) === String(realOwnerUserInfo.uid) ? 'right-arrow' : 'left-arrow'"
+              :class="String(item.senderUid) === String(realOwnerUserInfo.uid) ? 'arrow arrow-right' : 'arrow arrow-left'"
             ></div>
-            <markdown>{{ item.content }}</markdown>
+            <div>
+              <markdown>{{ item.content }}</markdown>
+            </div>
           </div>
+          <!-- ------------- -->
+          <!-- 头像区域 -->
+          <img v-if="String(item.senderUid) === String(realOwnerUserInfo.uid)" :src="realOwnerUserInfo.avatar" alt="" class="chat-avatar">
         </div>
       </div>
     </el-row>
@@ -163,12 +165,14 @@ export default {
 }
 
 .msg-container {
-  height: 90%;  
+  height: 90%;
   overflow: auto;
   width: 100%;
 }
 .dialog {
-  width: 50%;
+  min-width: 40%;
+  width: auto;
+  max-width: 80%;;
   height: auto;
   min-height: 2rem;
   border: 1.5px solid #000;
@@ -176,38 +180,23 @@ export default {
   position: relative;
   margin-top: 10px;
 }
-.float-left {
-  float: left;
-  margin-left: 40px;
-  display: inline;
-}
-.float-right {
-  float: right;
-  margin-right: 40px;
-}
-.right-arrow {
+.arrow {
   content: "";
   display: block;
   position: absolute;
   width: 0;
   height: 0;
   top: 5%;
-  left: 100%;
-  border-left: 12px solid #000;
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
 }
-.left-arrow {
-  content: "";
-  display: block;
-  position: absolute;
-  width: 0;
-  height: 0;
-  top: 5%;
-  left: -12px;
-  border-right: 12px solid #000;
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;
+.arrow-left {
+border-right: 10px solid #000;
+left: -12px;
+}
+.arrow-right {
+border-left: 10px solid #000;
+left: 100%;
 }
 .chat-avatar {
   width: 40px;
@@ -215,17 +204,23 @@ export default {
   border: 2px solid #f1f1f1;
   margin-top: 10px;
   border-radius: 100px;
-}
-.left {
-  float: left;
-}
-.right {
-  float: right;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 .chat-parent {
   min-height: 50px;
-  height: 50px;
-  width: 90%;
+  height: auto;
+  width: 65%;
   margin: 0 5%;
+  display: flex;
+  align-items: flex-start;
+}
+.left {
+  float: left;
+  justify-content: flex-start;
+}
+.right {
+  float: right;
+  justify-content: flex-end;
 }
 </style>
