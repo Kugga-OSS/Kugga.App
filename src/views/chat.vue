@@ -49,13 +49,13 @@ import {
   heartCheck,
   syncMsg
 } from "../static/js/wsstatus";
+import {wspath} from "../static/js/http"
 
 export default {
   data() {
     return {
       // websocket相关状态
       websocket: null,
-      wspath: "ws://localhost:10086/ws",
       maxReconnectTimes: 3, // 最多重连三次
       newMsg: {},
 
@@ -191,7 +191,7 @@ export default {
         alert("您的浏览器不支持我们的站点，请选择Chrome或Firefox浏览器！");
       } else {
         // 实例化socket
-        this.websocket = new WebSocket(this.wspath);
+        this.websocket = new WebSocket(wspath);
         // 监听socket连接
         this.websocket.onopen = this.onopen;
         // 监听socket错误信息

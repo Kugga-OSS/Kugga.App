@@ -1,12 +1,14 @@
 import { MessageBox, Message } from 'element-ui'
 import router from '../../router/index'
 
+export const wspath = process.env.VUE_APP_WS_PATH
+
 var axios = require("axios");
 axios.defaults.withCredentials=true
 
 // 这里的应该是从配置中读出来的，但是暂时不知道怎么做
 const http = axios.create({
-    baseURL: "http://localhost:5555",
+    baseURL: process.env.VUE_APP_HTTP_URL,
     timeout: 5000
 })
 
