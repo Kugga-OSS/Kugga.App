@@ -21,6 +21,11 @@ import contact from "./components/feature/contact"
 import addNewFriend from "./components/feature/addNewFriend"
 import friendRequest from "./components/feature/friendRequest"
 import edit from "./components/feature/edit"
+import deleteFriend from "./components/feature/deleteFriend"
+import createGroup from "./components/feature/createGroup"
+import cancellAccount from "./components/feature/cancellAccount"
+import aboutme from "./components/feature/aboutme"
+import howtouse from "./components/feature/howtouse"
 
 
 Vue.use(ElementUI)
@@ -38,6 +43,11 @@ Vue.component('contact', contact);
 Vue.component('add-new-friend', addNewFriend);
 Vue.component('friend-request', friendRequest);
 Vue.component('edit', edit);
+Vue.component('delete-friend', deleteFriend);
+Vue.component('create-group', createGroup);
+Vue.component('cancell-account', cancellAccount);
+Vue.component('aboutme', aboutme);
+Vue.component('how-to-use', howtouse);
 
 // markdown 渲染组件
 Vue.component("markdown", VueMarkdown);

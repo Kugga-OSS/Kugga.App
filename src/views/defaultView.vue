@@ -5,11 +5,26 @@
       <h3 class="overflow-text">欢迎回来！{{ ownerInfo.displayName }} ！</h3>
     </div>
     <!-- 监听close-float-box事件，若close-float-box出发，则在父组件中执行close -->
-    <contact :isVisiable="show.contact" v-on:close-float-box="close" title="好友列表" v-on:push-item="pushItem"></contact>
-    <add-new-friend :isVisiable="show.addNewFriend" v-on:close-float-box="close" v-on:send-new-request="sendNewRequest" title="添加联系人"></add-new-friend>
+    <contact
+      :isVisiable="show.contact"
+      v-on:close-float-box="close"
+      title="好友列表"
+      v-on:push-item="pushItem"
+    ></contact>
+    <add-new-friend
+      :isVisiable="show.addNewFriend"
+      v-on:close-float-box="close"
+      v-on:send-new-request="sendNewRequest"
+      title="添加联系人"
+    ></add-new-friend>
     <friend-request :isVisiable="show.friendRequest" v-on:close-float-box="close" title="好友请求"></friend-request>
-    <edit :isVisiable="show.edit" v-on:close-float-box="close" title="编辑个人信息">
-    </edit>
+    <edit :isVisiable="show.edit" v-on:close-float-box="close" title="编辑个人信息"></edit>
+    <delete-friend :isVisiable="show.deleteFriend" v-on:close-float-box="close" title="删除好友"></delete-friend>
+    <create-group :isVisiable="show.createGroup" v-on:close-float-box="close" title="创建群组"></create-group>
+    <cancell-account :isVisiable="show.cancellAccount" v-on:close-float-box="close" title="注销账号"></cancell-account>
+    <aboutme :isVisiable="show.aboutme" v-on:close-float-box="close" title="联系开发者"></aboutme>
+    <how-to-use :isVisiable="show.howtouse" v-on:close-float-box="close" title="使用指南"></how-to-use>
+
     <div class="feature-container">
       <h2 style="float: left;">联系人</h2>
       <div class="feature-block-set">
@@ -36,7 +51,7 @@
         <div @click="showFloatBox('edit')" class="block">
           <feature-block iconName="el-icon-edit" message="个人信息"></feature-block>
         </div>
-        <div @click="showFloatBox('deleteAccount')" class="block">
+        <div @click="showFloatBox('cancellAccount')" class="block">
           <feature-block iconName="el-icon-delete" message="注销账号"></feature-block>
         </div>
         <div @click="quit" class="block">
@@ -45,10 +60,13 @@
       </div>
     </div>
     <div class="feature-container">
-      <h2 style="float: left;">开发者信息</h2>
+      <h2 style="float: left;">其他</h2>
       <div class="feature-block-set">
-        <div @click="showFloatBox('callMe')" class="block">
+        <div @click="showFloatBox('aboutme')" class="block">
           <feature-block iconName="el-icon-paperclip" message="联系开发者"></feature-block>
+        </div>
+        <div @click="showFloatBox('howtouse')" class="block">
+          <feature-block iconName="el-icon-question" message="使用指南"></feature-block>
         </div>
       </div>
     </div>
@@ -57,8 +75,7 @@
 
 <script>
 export default {
-  props: {
-  },
+  props: {},
   data() {
     return {
       ownerInfo: {},
@@ -70,8 +87,9 @@ export default {
         createGroup: false,
         friendRequest: false,
         edit: false,
-        deleteAccount: false,
-        callMe: false
+        cancellAccount: false,
+        aboutme: false,
+        howtouse: false
       }
     };
   },
@@ -127,7 +145,7 @@ export default {
   },
   mounted() {
     this.getUser();
-  },
+  }
 };
 </script>
 
