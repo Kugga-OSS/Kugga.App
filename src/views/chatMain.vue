@@ -122,8 +122,11 @@ export default {
       this.realUserInfo = res.data;
     },
     async fetchMsg() {
-      const res = await this.$service.get("/auth_api/msg", {otherUid: this.realUserInfo.uid}).catch(() => {});
-      this.msgList = res && res.data && res.data.msgList ? res.data.msgList : [];
+      const res = await this.$service
+        .get("/auth_api/msg", { otherUid: this.realUserInfo.uid })
+        .catch(() => {});
+      this.msgList =
+        res && res.data && res.data.msgList ? res.data.msgList : [];
     },
     addNewMsg2List(msg) {
       if (msg === null || msg === undefined) return;
@@ -154,13 +157,11 @@ export default {
       })();
     } else {
       this.realOwnerUserInfo = this.ownerUserInfo;
-    // 拉取历史记录
+      // 拉取历史记录
       this.fetchMsg();
     }
   },
-  created() {
-
-  },
+  created() {},
   watch: {
     newMsg: {
       immediate: true,
@@ -173,7 +174,12 @@ export default {
         ) {
           return;
         }
-        this.addNewMsg2List(newVal);
+        if (
+          (this.realUserInfo && this.realUserInfo.uid == newVal.renderUid) ||
+          this.realOwnerUserInfo.uid == newVal.senderUid
+        ) {
+          this.addNewMsg2List(newVal);
+        }
       }
     }
   }
@@ -201,7 +207,7 @@ export default {
   border-radius: 8px;
   position: relative;
   margin-top: 10px;
-  margin-bottom: 5px;;
+  margin-bottom: 5px;
 }
 .arrow {
   content: "";
