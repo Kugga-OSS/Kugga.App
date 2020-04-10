@@ -49,7 +49,7 @@ import {
   heartCheck,
   syncMsg
 } from "../static/js/wsstatus";
-import {wspath} from "../static/js/http"
+import { wspath } from "../static/js/http";
 
 export default {
   data() {
@@ -124,7 +124,7 @@ export default {
     removeItem(username) {
       for (var entry of this.recentChatList) {
         if (username === entry.userName) {
-          this.recentChatList.pop(entry);
+          this.recentChatList.splice(this.recentChatList.indexOf(entry), 1);
           break;
         }
       }
@@ -132,9 +132,9 @@ export default {
         this.$router.push({
           name: "defaultView"
         });
-      }
-      var item = this.recentChatList[0]
-      this.$router.push({
+      } else {
+        var item = this.recentChatList[0];
+        this.$router.push({
           name: "chatMain",
           params: {
             userInfo: item,
@@ -143,6 +143,7 @@ export default {
             ownerUserInfo: this.ownerInfo
           }
         });
+      }
     },
     // 进入和某个好友的聊天界面
     chatWith(item) {
@@ -167,7 +168,9 @@ export default {
       return res.data.uid;
     },
     async pullRecentChatList() {
-      const res = await this.$service.get("/auth_api/user/recentChat").catch(() => {});
+      const res = await this.$service
+        .get("/auth_api/user/recentChat")
+        .catch(() => {});
       this.recentChatList = res.data.friendList;
     },
     // 推送好友请求提示
