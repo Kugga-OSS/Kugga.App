@@ -46,7 +46,7 @@ steps:
      then
       echo 'failed to pull container...'
       exit $rc;
-    else
+     else
       echo 'success to pull container...'
      fi
      
@@ -56,6 +56,6 @@ steps:
      then
       echo 'failed to run container...'
       exit $rc;
-    else
+     else
       echo 'success to run container...'
      fi
