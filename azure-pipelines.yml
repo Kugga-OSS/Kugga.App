@@ -9,11 +9,13 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+  imageName: 'kugga-app'
+  DOCKER_BUILDKIT: 1
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+steps:
+-  script: |
+  docker build -f Dockerfile -t $(imageName) .
+  docker login -u $(aliusername) -p $(alipassword)  registry.cn-hangzhou.aliyuncs.com
+  docker tag $(imageName) registry.cn-hangzhou.aliyuncs.com/ayang818/kugga-app
+  docker push registry.cn-hangzhou.aliyuncs.com/ayang818/kugga-app

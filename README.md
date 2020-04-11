@@ -1,5 +1,7 @@
 # kugga-app
 
+[![Build Status](https://dev.azure.com/ayang818/Kugga/_apis/build/status/Kugga-OSS.Kugga.App?branchName=master)](https://dev.azure.com/ayang818/Kugga/_build/latest?definitionId=1&branchName=master)
+
 ## Project setup
 ```
 npm install
