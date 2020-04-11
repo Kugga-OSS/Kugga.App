@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h2>欢迎使用 Kugga </h2>
+      <h2>【登录】：欢迎使用 Kugga！</h2>
     </div>
     <div class="login" style="height: 100%;">
       <img

@@ -33,18 +33,21 @@ steps:
       rc=$?
       if [[ $rc != 0 ]];
       then
-       echo 'failed to remove container...'
-       exit $rc;
+        echo 'failed to remove container...'
+        exit $rc;
+      else
+        echo 'success to remove container...'
       fi
      fi
      
-     docker login -u ${ALI_USERNAME} -p ${ALI_PASSWORD}  registry.cn-hangzhou.aliyuncs.com
      docker pull registry.cn-hangzhou.aliyuncs.com/ayang818/kugga-app:latest >> /dev/null 2>&1
      rc=$?
      if [[ $rc != 0 ]];
      then
       echo 'failed to pull container...'
       exit $rc;
+    else
+      echo 'success to pull container...'
      fi
      
      docker run -d -p 567:80 --name=kugga-web --restart=always registry.cn-hangzhou.aliyuncs.com/ayang818/kugga-app:latest >> /dev/null 2>&1
@@ -53,4 +56,6 @@ steps:
      then
       echo 'failed to run container...'
       exit $rc;
+    else
+      echo 'success to run container...'
      fi
