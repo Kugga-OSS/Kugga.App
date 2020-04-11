@@ -20,7 +20,7 @@ steps:
     docker tag $(imageName):latest registry.cn-hangzhou.aliyuncs.com/ayang818/kugga-app:latest
     docker push registry.cn-hangzhou.aliyuncs.com/ayang818/kugga-app:latest
 
-- task: SSH
+- task: SSH@0
   displayName: 'deploy to remote machine'
   inputs:
     sshEndpoint: 'huaweicloud'
