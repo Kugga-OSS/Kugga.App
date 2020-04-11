@@ -38,7 +38,7 @@ steps:
       fi
      fi
      
-     docker login -u $(aliusername) -p $(alipassword)  registry.cn-hangzhou.aliyuncs.com
+     docker login -u ${ALI_USERNAME} -p ${ALI_PASSWORD}  registry.cn-hangzhou.aliyuncs.com
      docker pull registry.cn-hangzhou.aliyuncs.com/ayang818/kugga-app:latest >> /dev/null 2>&1
      rc=$?
      if [[ $rc != 0 ]];
@@ -54,5 +54,3 @@ steps:
       echo 'failed to run container...'
       exit $rc;
      fi
-     
-     echo 'success to start kugga-web'
