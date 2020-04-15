@@ -214,7 +214,7 @@ export default {
       },
       // 修改昵称相关状态
       displayNameForm: {
-        email: ""
+        displayName: ""
       },
       disableSubmitDisplayName: true,
       displayNameRules: {
@@ -224,27 +224,67 @@ export default {
     };
   },
   methods: {
-    async submit(type) {},
+    async submit(type) {
+      if (type === "password") {
+        const res = await this.$service
+          .post("/auth_api/user/password", {
+            originPass: this.passForm.originPass,
+            newPass: this.passForm.newPass
+          })
+          .catch(() => {});
+        this.$message({
+          message: res.data.message,
+          type: "success"
+        });
+      }
+      if (type === "displayName") {
+        const res = await this.$service
+          .post("/auth_api/user/nameOrEmail", {
+            displayName: this.displayNameForm.displayName
+          })
+          .catch(() => {});
+        this.$message({
+          message: res.data.message,
+          type: "success"
+        });
+        return;
+      }
+      if (type === "email") {
+        const res = await this.$service
+          .post("/auth_api/user/nameOrEmail", {
+            email: this.emailForm.email
+          })
+          .catch(() => {});
+        this.$message({
+          message: res.data.message,
+          type: "success"
+        });
+      }
+    },
     async getUser() {
       const res = await this.$service.get("/auth_api/user").catch(() => {});
       this.userInfo = res.data;
     },
     async uploadAvatar(param) {
-        const file = param.file;
-        const res = await this.$service.upload("/auth_api/user/avatar", file);
-        if (res && res.data && res.data.message) {
-          this.$message({
-            message: res.data.message,
-            type: "success"
-          })
-        }
-        this.userInfo.avatar = res.data.url;
+      const file = param.file;
+      const res = await this.$service.upload("/auth_api/user/avatar", file);
+      if (res && res.data && res.data.message) {
+        this.$message({
+          message: res.data.message,
+          type: "success"
+        });
+      }
+      this.userInfo.avatar = res.data.url;
     },
     beforeUpload(file) {
-        if (file.type != "image/png" && file.type != "image/jpg" && file.type != "image/jpeg") {
-            this.$message.error("请上传图片文件！");
-            return false;
-        }
+      if (
+        file.type != "image/png" &&
+        file.type != "image/jpg" &&
+        file.type != "image/jpeg"
+      ) {
+        this.$message.error("请上传图片文件！");
+        return false;
+      }
     },
     close() {
       this.$emit("close-float-box");
@@ -278,7 +318,7 @@ export default {
       }
     },
     handleAvatarSuccess(file) {
-        this.$message.success("更换头像成功");
+      this.$message.success("更换头像成功");
     }
   },
   watch: {
